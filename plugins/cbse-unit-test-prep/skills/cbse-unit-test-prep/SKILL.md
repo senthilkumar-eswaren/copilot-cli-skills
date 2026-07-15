@@ -97,3 +97,14 @@ mirrors actual CBSE marking schemes.
   for the specific subject/file where you've confirmed that's how chapters are actually written;
   everywhere else, rely on the `Chapter N:` / `Part A|B` pattern and the "nest one level deeper
   than current section" fallback instead.
+- This pipeline is **not self-contained** — it shells out to `pandoc`, `python-docx`/`pypdf`, and a
+  Chromium-based browser, none of which are bundled with the skill. On a machine where these aren't
+  already installed, budget time to install them (or degrade gracefully to DOCX-only if no
+  Chromium-based browser is found) — see the requirements table and install matrix at the top of
+  `references/03-assembly-and-conversion-pipeline.md`.
+- Don't write shell snippets assuming BSD sed (macOS) semantics — `sed -i ''` breaks on GNU/Linux
+  sed. Do in-place text edits in Python instead (as the reference pipeline does throughout), which
+  behaves identically cross-platform.
+- Don't hardcode a single browser path (e.g. the macOS Chrome `.app` bundle) for the PDF step —
+  detect across common macOS/Linux/WSL locations and fall back to "DOCX only, no PDF" rather than
+  failing the whole task if none are found.

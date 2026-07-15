@@ -4,20 +4,54 @@ This is the exact pipeline used successfully to assemble N independently-generat
 Markdown files into one polished DOCX + PDF. Follow it in order; each step exists because of a
 real failure mode hit the first time this was built (see inline notes).
 
-## 0. Toolchain check (do this once, early, in parallel with launching content agents)
+## 0. Requirements & cross-platform toolchain check
+
+**This pipeline shells out to external tools — it is not self-contained.** Whatever machine runs
+this skill needs, or must be able to install:
+
+| Tool | Why | If missing |
+|---|---|---|
+| `pandoc` | Markdown → DOCX/HTML conversion (core of the pipeline) | See install matrix below |
+| `python3` + `python-docx` + `pypdf` (pip packages) | DOCX page-break insertion + DOCX/PDF verification | `python3 -m pip install python-docx pypdf --quiet` (needs internet/PyPI access) |
+| A Chromium-based browser (Chrome/Chromium/Edge) | Headless HTML→PDF printing | See detection logic below; if truly unavailable, **skip PDF and deliver DOCX only** — don't fail the whole task over a missing PDF engine |
+
+None of this is bundled with the skill itself, so on a brand-new machine expect to spend the first
+run installing things. Do the check/install step in parallel with launching the content-generation
+agents (step 5 of `SKILL.md`) so it doesn't add latency.
 
 ```bash
-which pandoc textutil python3 2>&1
-ls /Applications 2>&1 | grep -iE "chrome|word|libreoffice"
+which pandoc python3 2>&1
+python3 -c "import docx, pypdf" 2>&1   # non-zero/traceback means the pip packages aren't installed yet
+uname -s   # Darwin (macOS) / Linux / MINGW*|MSYS*|CYGWIN* (Windows via Git Bash) — branch on this
 ```
 
-- If `pandoc` is missing: `brew install pandoc` (lightweight, no LaTeX needed — its built-in docx
-  writer works standalone; for PDF we go via HTML + headless Chrome instead of a LaTeX engine).
-- Chrome is used headless for HTML→PDF printing (reliable, respects CSS `page-break` rules).
-  macOS `textutil` can convert docx↔rtf/html but not from Markdown directly, so it's not the primary
-  path here — pandoc handles Markdown directly.
-- `python3 -m pip install python-docx pypdf --quiet` — needed for page-break insertion and PDF
-  verification respectively (install once, reuse).
+**Installing pandoc, by platform** (try in this order, use whichever succeeds first):
+
+```bash
+# macOS
+command -v brew >/dev/null && brew install pandoc
+
+# Debian/Ubuntu Linux
+command -v apt-get >/dev/null && sudo apt-get update && sudo apt-get install -y pandoc
+
+# Fedora/RHEL Linux
+command -v dnf >/dev/null && sudo dnf install -y pandoc
+
+# Arch Linux
+command -v pacman >/dev/null && sudo pacman -S --noconfirm pandoc
+
+# Fallback for any OS (no package manager / no sudo): download a prebuilt release directly
+# from https://github.com/jgm/pandoc/releases and put the binary on PATH.
+```
+
+Pandoc's own docx writer needs no LaTeX install — that's why this pipeline goes DOCX-native and
+HTML→Chrome for PDF instead of a LaTeX PDF engine (which would be a much heavier dependency).
+
+**Do not assume BSD sed (macOS) semantics.** GNU sed (default on virtually all Linux distros) and
+BSD sed (macOS/Darwin) have incompatible `-i` (in-place edit) flag syntax — `sed -i '' '...'` is
+correct on macOS but breaks or misbehaves on Linux. This pipeline avoids the problem entirely by
+doing all in-place text edits in **Python** instead of `sed -i`, which behaves identically on every
+OS. Steps 2 and 4 below use this approach — don't reintroduce `sed -i` when adapting this pipeline.
 
 ## 1. Front matter file (write this yourself while agents run)
 
@@ -47,8 +81,20 @@ tail -n +4 "$RAW_AGENT_OUTPUT_TMPFILE" > "$DIR/NN_subject-slug.md"
 
 # Find and strip any trailing conversational offer (varies in wording — search broadly):
 grep -n "^If you want\|I can next\|I can also turn\|Would you like" "$DIR/NN_subject-slug.md"
-# then trim the file to end just before that line, e.g.:
-sed -i '' '<offer_line_start>,$d' "$DIR/NN_subject-slug.md"
+```
+
+Then trim the file to end just before that line — do this in Python, not `sed -i`, for portability
+across BSD (macOS) and GNU (Linux) sed dialects:
+
+```python
+# /tmp/trim_offer.py — usage: python3 /tmp/trim_offer.py <file> <line_number_of_offer_1_indexed>
+import sys
+path, line_no = sys.argv[1], int(sys.argv[2])
+with open(path, encoding='utf-8') as f:
+    lines = f.readlines()
+with open(path, 'w', encoding='utf-8') as f:
+    f.writelines(lines[:line_no - 1])
+print(f"Trimmed {path} to {line_no - 1} lines")
 ```
 
 Re-check every file afterward: `grep -ln "^If you want\|I can next\|I can also turn" "$DIR"/*.md`
@@ -148,9 +194,17 @@ for f in "$DIR"/*.md; do printf '\n' >> "$f"; done
 
 cat "$DIR/00_front_matter.md" "$DIR/01_subject-a.md" "$DIR/02_subject-b.md" ... > "$DIR/MASTER.md"
 
-# Strip standalone horizontal rules (bare --- or *** alone on a line) — leaves table separators
-# (|---|---|) untouched since those don't match this anchored pattern:
-sed -i '' -E '/^-{3,}[[:space:]]*$/d' "$DIR/MASTER.md"
+# Strip standalone horizontal rules (bare ---, ***, or ___ alone on a line) — leaves table
+# separators (|---|---|) untouched. Done in Python (not `sed -i`) for BSD/GNU portability:
+python3 -c "
+import re
+path = '$DIR/MASTER.md'
+with open(path, encoding='utf-8') as f:
+    lines = f.readlines()
+lines = [l for l in lines if not re.match(r'^(-{3,}|\*{3,}|_{3,})\s*\n?\$', l)]
+with open(path, 'w', encoding='utf-8') as f:
+    f.writelines(lines)
+"
 
 # Sanity check: exactly one H1 per subject + front matter, each on its own line:
 grep -n "^# " "$DIR/MASTER.md"
@@ -214,11 +268,39 @@ CSSEOF
 cd "$DIR"   # must cd first — relative --css path won't resolve otherwise
 pandoc MASTER.md -o study_guide.html --toc --toc-depth=2 \
   --metadata title="<TITLE>" --css=style.css --embed-resources --standalone
-
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
-  --no-pdf-header-footer --print-to-pdf="$DIR/study_guide.pdf" \
-  --print-to-pdf-no-header "file://$DIR/study_guide.html"
 ```
+
+**Find a Chromium-based browser cross-platform** — don't hardcode one path. Try in order and use
+whichever resolves first; if none resolve, skip PDF generation entirely and tell the user only the
+DOCX was produced (don't fail the whole task over a missing PDF engine):
+
+```bash
+CHROME=""
+for candidate in \
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  "/Applications/Chromium.app/Contents/MacOS/Chromium" \
+  "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" \
+  "google-chrome" "google-chrome-stable" "chromium" "chromium-browser" "microsoft-edge" \
+  "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"; do
+  if [ -x "$candidate" ] || command -v "$candidate" >/dev/null 2>&1; then
+    CHROME="$candidate"
+    break
+  fi
+done
+
+if [ -z "$CHROME" ]; then
+  echo "No Chromium-based browser found — skipping PDF, DOCX is still the primary deliverable."
+else
+  "$CHROME" --headless --disable-gpu --no-pdf-header-footer \
+    --print-to-pdf="$DIR/study_guide.pdf" \
+    --print-to-pdf-no-header "file://$DIR/study_guide.html"
+fi
+```
+
+The first three candidates are macOS `.app` bundle paths (checked with `-x` since they're absolute
+paths, not PATH lookups); the middle group covers Linux package names typically on `PATH`
+(`command -v`); the last is a common WSL-on-Windows path to host Chrome. Adjust/extend this list if
+the target machine has a browser installed somewhere non-standard.
 
 (Harmless `task_policy_set` stderr warnings from Chrome headless can be ignored as long as the PDF
 file is written.)
@@ -253,7 +335,7 @@ re-check file boundaries from step 4 (trailing newlines) before re-running the c
 ```bash
 cp "$DIR/study_guide.docx" ~/Downloads/"<School>_<Grade><Stream>_UT<N>_Study_Guide.docx"
 cp "$DIR/study_guide.pdf" ~/Downloads/"<School>_<Grade><Stream>_UT<N>_Study_Guide.pdf"
-rm -f "$DIR/check.txt" /tmp/normalize.py /tmp/insert_pagebreaks.py
+rm -f "$DIR/check.txt" /tmp/normalize.py /tmp/insert_pagebreaks.py /tmp/trim_offer.py
 ```
 
 Keep the per-subject `.md` files and `MASTER.md` in the session's `files/` directory (useful if the

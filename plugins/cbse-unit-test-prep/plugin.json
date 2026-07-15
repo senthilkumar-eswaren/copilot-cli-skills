@@ -1,0 +1,13 @@
+{
+  "name": "cbse-unit-test-prep",
+  "description": "Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX and PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream.",
+  "version": "1.0.0",
+  "author": {
+    "name": "senthilkumar-eswaren"
+  },
+  "repository": "https://github.com/senthilkumar-eswaren/copilot-cli-skills",
+  "license": "MIT",
+  "keywords": ["cbse", "education", "study-guide", "exam-prep", "docx", "pdf"],
+  "category": "productivity",
+  "skills": "skills/"
+}

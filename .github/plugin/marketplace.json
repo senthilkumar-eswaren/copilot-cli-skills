@@ -1,0 +1,18 @@
+{
+  "name": "copilot-cli-skills",
+  "owner": {
+    "name": "senthilkumar-eswaren"
+  },
+  "metadata": {
+    "description": "Personal collection of GitHub Copilot CLI plugins/skills",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "cbse-unit-test-prep",
+      "description": "Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX and PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream.",
+      "version": "1.0.0",
+      "source": "plugins/cbse-unit-test-prep"
+    }
+  ]
+}

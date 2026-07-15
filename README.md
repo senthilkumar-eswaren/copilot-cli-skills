@@ -1,33 +1,80 @@
 # copilot-cli-skills
 
-Personal collection of reusable [GitHub Copilot CLI](https://docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-cli) skills.
+Personal collection of [GitHub Copilot CLI](https://docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-cli)
+plugins/skills — packaged so they can be installed on **any machine**, not just the one they were
+built on.
 
-Each top-level folder is one skill: a `SKILL.md` (with YAML frontmatter — `name` + `description`
-that tells Copilot CLI when to auto-invoke it) plus an optional `references/` folder of detail docs
-that are only read on demand, to keep the main skill file lean.
+This repo doubles as a **plugin marketplace** (via `.github/plugin/marketplace.json`), so every
+plugin under `plugins/` is installable directly by GitHub Copilot CLI without manually copying or
+symlinking files.
 
-## Installing a skill locally
+## Installing a plugin from this repo (recommended — works on any machine)
 
-Copilot CLI loads personal skills from `~/.copilot/skills/<skill-name>/`. To install one from this
-repo:
+**Option A — register this repo as a marketplace once, then install by name:**
 
 ```bash
-ln -s ~/copilot-cli-skills/<skill-name> ~/.copilot/skills/<skill-name>
+copilot plugin marketplace add senthilkumar-eswaren/copilot-cli-skills
+copilot plugin install cbse-unit-test-prep@copilot-cli-skills
 ```
 
-Symlinking (rather than copying) keeps your local install and this repo in sync — edit either
-location and the change shows up in both.
+**Option B — install directly from the GitHub subdirectory, no marketplace needed:**
 
-## Skills in this repo
+```bash
+copilot plugin install senthilkumar-eswaren/copilot-cli-skills:plugins/cbse-unit-test-prep
+```
 
-| Skill | Description |
+Verify with `copilot plugin list` (or `/plugin list` inside an interactive session).
+
+> Installing a plugin only loads its `SKILL.md`/agents/hooks into Copilot CLI — it does **not**
+> install whatever external command-line tools that skill's instructions may shell out to (e.g.
+> `pandoc`, a browser, Python packages). Check each plugin's own docs for its runtime requirements.
+
+## Repo structure
+
+```text
+copilot-cli-skills/
+├── README.md
+├── .github/plugin/marketplace.json   # marketplace registry — lists every plugin below
+└── plugins/
+    └── cbse-unit-test-prep/
+        ├── plugin.json               # plugin manifest (name, description, version, ...)
+        └── skills/
+            └── cbse-unit-test-prep/
+                ├── SKILL.md          # triggers Copilot CLI to use this skill automatically
+                └── references/       # detail docs the skill reads on-demand
+```
+
+A plugin can bundle more than skills (agents, hooks, MCP server configs — see the
+[plugin reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-plugin-reference)),
+but every plugin in this repo currently contains just one skill.
+
+## Plugins in this repo
+
+| Plugin | Description |
 |---|---|
-| [`cbse-unit-test-prep`](./cbse-unit-test-prep) | Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX + PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream. |
+| [`cbse-unit-test-prep`](./plugins/cbse-unit-test-prep) | Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX + PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream. Requires `pandoc`, Python (`python-docx`, `pypdf`), and a Chromium-based browser on the machine running it — see the plugin's `references/03-assembly-and-conversion-pipeline.md` for an install matrix and graceful-fallback behavior when a tool is missing. |
 
-## Adding a new skill
+## Adding a new plugin to this repo
 
-1. Create `<skill-name>/SKILL.md` with YAML frontmatter (`name`, `description`) and the skill's
-   instructions in Markdown below it.
-2. Put any large reference material the skill should read on-demand under `<skill-name>/references/`.
-3. Symlink it into `~/.copilot/skills/<skill-name>` to activate it locally.
-4. Commit and push.
+1. Create `plugins/<plugin-name>/plugin.json` (minimum: `{"name": "<plugin-name>"}` — see the
+   [plugin manifest reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-plugin-reference#pluginjson)
+   for optional fields like `description`, `version`, `author`).
+2. Add its `SKILL.md` (+ optional `references/`) under `plugins/<plugin-name>/skills/<plugin-name>/`.
+3. Add an entry for it to the `plugins` array in `.github/plugin/marketplace.json`, with
+   `"source": "plugins/<plugin-name>"`.
+4. Install and smoke-test locally: `copilot plugin install ./plugins/<plugin-name>`, then
+   `copilot plugin list` to confirm it loaded, and exercise the skill to confirm it triggers and
+   behaves as expected.
+5. Commit and push. Anyone with this marketplace registered can now
+   `copilot plugin install <plugin-name>@copilot-cli-skills`.
+
+### Local development loop
+
+While iterating on a plugin before it's pushed, install straight from your local clone:
+
+```bash
+copilot plugin install ~/copilot-cli-skills/plugins/<plugin-name>
+```
+
+Plugin components are cached on install, so re-run `copilot plugin install <path>` after each
+local edit to pick up changes (`copilot plugin uninstall <name>` to remove it entirely).
