@@ -15,12 +15,14 @@ symlinking files.
 ```bash
 copilot plugin marketplace add senthilkumar-eswaren/copilot-cli-skills
 copilot plugin install cbse-unit-test-prep@copilot-cli-skills
+copilot plugin install sof-olympiad-prep@copilot-cli-skills
 ```
 
 **Option B — install directly from the GitHub subdirectory, no marketplace needed:**
 
 ```bash
 copilot plugin install senthilkumar-eswaren/copilot-cli-skills:plugins/cbse-unit-test-prep
+copilot plugin install senthilkumar-eswaren/copilot-cli-skills:plugins/sof-olympiad-prep
 ```
 
 Verify with `copilot plugin list` (or `/plugin list` inside an interactive session).
@@ -36,12 +38,20 @@ copilot-cli-skills/
 ├── README.md
 ├── .github/plugin/marketplace.json   # marketplace registry — lists every plugin below
 └── plugins/
-    └── cbse-unit-test-prep/
-        ├── plugin.json               # plugin manifest (name, description, version, ...)
+    ├── cbse-unit-test-prep/
+    │   ├── plugin.json               # plugin manifest (name, description, version, ...)
+    │   └── skills/
+    │       └── cbse-unit-test-prep/
+    │           ├── SKILL.md          # triggers Copilot CLI to use this skill automatically
+    │           └── references/       # detail docs the skill reads on-demand
+    └── sof-olympiad-prep/
+        ├── plugin.json
         └── skills/
-            └── cbse-unit-test-prep/
-                ├── SKILL.md          # triggers Copilot CLI to use this skill automatically
-                └── references/       # detail docs the skill reads on-demand
+            └── sof-olympiad-prep/
+                ├── SKILL.md
+                ├── data/             # exam patterns, syllabi, question styles (JSON)
+                ├── references/
+                └── scripts/          # Python helpers (blueprint, validate, render PDFs, score)
 ```
 
 A plugin can bundle more than skills (agents, hooks, MCP server configs — see the
@@ -53,6 +63,7 @@ but every plugin in this repo currently contains just one skill.
 | Plugin | Description |
 |---|---|
 | [`cbse-unit-test-prep`](./plugins/cbse-unit-test-prep) | Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX + PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream. Requires `pandoc`, Python (`python-docx`, `pypdf`), and a Chromium-based browser on the machine running it — see the plugin's `references/03-assembly-and-conversion-pipeline.md` for an install matrix and graceful-fallback behavior when a tool is missing. |
+| [`sof-olympiad-prep`](./plugins/sof-olympiad-prep) | Generates original SOF-style practice papers for Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a score log and weak-topic reports. Papers are written fresh from the published exam pattern and syllabus — no SOF papers are copied or bundled; not affiliated with SOF. Requires Python 3.9+ (standard library only) and Google Chrome, Microsoft Edge or Chromium for PDFs (or set `OLYMPIAD_BROWSER` to the browser binary; without a browser it writes HTML only); PyMuPDF is optional (page footers, previews). Data is kept in `~/olympiad-prep` (override with `OLYMPIAD_PREP_HOME`); PDFs are saved to `~/Downloads` when it exists (override with `OLYMPIAD_OUT_DIR`). |
 
 ## Adding a new plugin to this repo
 

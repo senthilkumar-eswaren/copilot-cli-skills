@@ -1,0 +1,1077 @@
+{
+  "_about": "Question styles per topic. 'figure' says how often a question on this topic carries a figure (always, often = about 2 in 3, sometimes = about 1 in 3, never). The blueprint picks a style from figure_styles when the question needs a figure and from text_styles otherwise. 'tips' are extra notes for the question writer.",
+  "topics": {
+    "Active and Passive Voice": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Change the sentence into passive voice",
+        "Change the sentence into active voice",
+        "Which sentence is in the passive voice"
+      ]
+    },
+    "Adjectives": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Degrees of comparison (positive, comparative, superlative)",
+        "Identify the adjective and its kind (quality, quantity, number, demonstrative)",
+        "Order of adjectives (opinion-size-age-shape-colour-origin-material)",
+        "Form an adjective from a noun"
+      ]
+    },
+    "Adverbs": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Identify the adverb and its kind (manner, place, time, frequency, degree)",
+        "Fill in the correct adverb",
+        "Form the adverb from an adjective",
+        "Position of the adverb of frequency"
+      ]
+    },
+    "Alphabet Test": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Which letter is N-th to the right or left of the M-th letter from the left or right",
+        "Alphabet written in reverse order; find a letter",
+        "Arrange words in dictionary order and pick the word in a given position",
+        "How many letters stay at the same place when a word is arranged alphabetically",
+        "Form a meaningful word using numbered letters (e.g. letters 1, 4, 5, 7 of a given word)",
+        "How many vowels or consonants are followed by a given kind of letter"
+      ]
+    },
+    "Analogy": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Figure analogy: figure (i) is to (ii) as (iii) is to ?; transformation by rotation, flip, shading swap or adding sides",
+        "Number analogy inside figures: two completed shapes and one with '?'"
+      ],
+      "text_styles": [
+        "Number analogy (e.g. 7 : 56 :: 9 : ?)",
+        "Number-pair analogy: choose the pair related like the given pair",
+        "Letter-pair analogy (e.g. ACE : BDF :: GIK : ?)",
+        "Word analogy (worker : tool, animal : home, young one, part : whole, instrument : measures)"
+      ]
+    },
+    "Anecdotes": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a short anecdote about a famous person or a funny incident",
+        "Passage question (specific detail) based on a short anecdote about a famous person or a funny incident",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Angles": {
+      "figure": "always",
+      "figure_styles": [
+        "Name the type of angle shown: acute, right, obtuse, straight, reflex",
+        "Find the missing angle on a straight line or around a point",
+        "Angle between the hands of a clock shown on a clock face",
+        "Count the angles of a type in a figure (e.g. how many right angles)",
+        "Angle turned by a person or a hand of a clock moving from one direction to another (compass figure)"
+      ],
+      "text_styles": [],
+      "tips": "Mark angles with small arcs and labels. Do not draw protractors with dense scales."
+    },
+    "Antonyms": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Word most OPPOSITE in meaning to the bold word in a sentence",
+        "Form the antonym with a prefix (un-, in-, im-, dis-, ir-)",
+        "Which pair is NOT a pair of antonyms"
+      ]
+    },
+    "Apologies": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say in a situation that needs a apology (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to make a apology",
+        "Choose the best response to the speaker's sentence"
+      ]
+    },
+    "Apps and Computerisation": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Uses of computers in banks (ATM), railways (online reservation), hospitals, schools and shops",
+        "Indian digital services: UPI payments, DigiLocker (digital documents), FASTag (toll using RFID), online railway tickets",
+        "Which app category does a task (maps, video calling, e-learning, payments)",
+        "Advantages of computerisation (speed, accuracy, record keeping)"
+      ]
+    },
+    "Articles": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in a, an, the or no article",
+        "Pairs of blanks with articles (table options)",
+        "Find the sentence with the wrong use of an article"
+      ]
+    },
+    "Artificial Intelligence": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Which of these is an example of AI (voice assistants, face unlock, recommendations, chatbots, map traffic prediction)",
+        "Meaning of AI and machine learning (learning from data); John McCarthy coined the term AI; the Turing Test",
+        "Which task needs AI and which does not",
+        "AI in daily life: translation apps, spam filters, self-driving cars"
+      ]
+    },
+    "Classification": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Odd figure out: four figures, three share a property (number of sides, symmetry, shading, closed curve)"
+      ],
+      "text_styles": [
+        "Odd one out among numbers (primes, squares, multiples, digit sums)",
+        "Odd one out among letter groups (gaps between letters, vowels)",
+        "Odd one out among words (category of animals, instruments, units)",
+        "Odd pair out among number pairs"
+      ]
+    },
+    "Clock and Calendar": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Clock face showing a time; find the angle between the hands or the time after some minutes"
+      ],
+      "text_styles": [
+        "Angle between the hour and minute hands at a given time (use 30h - 5.5m)",
+        "How many times the hands are at right angles or overlap in a period",
+        "A clock gains or loses some minutes per hour; find the time it shows",
+        "Day of the week after N days, or on a date given the day of another date",
+        "Leap years: which of these years is a leap year; number of days in a period",
+        "Dates in a month: how many Sundays, the date of the third Monday"
+      ],
+      "tips": "Check every day/date result with python3 datetime."
+    },
+    "Coding-Decoding": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Letter shift coding: if CAT is written as DBU, how is DOG written",
+        "Reverse or mirror letter coding (A<->Z, B<->Y)",
+        "Number coding: letters coded by their positions (sum or product of positions)",
+        "Symbol or substitution coding: 'if sky is called blue, blue is called water ...'",
+        "Coded sentence: 'tak pin sol' means 'big red ball'; find the code for one word",
+        "Mathematical operator coding: '+' means 'x', find the value of an expression"
+      ]
+    },
+    "Collocations": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in the blank with the word that goes naturally (e.g. ___ a promise, heavy ___ )",
+        "Which word does NOT go with the given word",
+        "Pick the correct verb-noun pair (do / make / take / have)"
+      ]
+    },
+    "Computation Operations": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Missing digits in a column addition, subtraction or multiplication drawn as a grid",
+        "Factor tree drawn as a figure: find the missing numbers"
+      ],
+      "text_styles": [
+        "Missing digits in a calculation (e.g. 4_7 x 6 = 2_82)",
+        "Factors and multiples; prime and composite numbers; prime factorisation",
+        "HCF and LCM of two or three numbers, including word problems (largest container, bells ringing together)",
+        "Divisibility rules for 2, 3, 4, 5, 6, 8, 9 and 11; find the missing digit so the number is divisible",
+        "Order of operations (BODMAS) with brackets",
+        "Estimation of a sum, difference or product to the nearest hundred or thousand"
+      ]
+    },
+    "Computer Networks": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Types of networks: PAN, LAN, MAN, WAN with examples (the Internet is the largest WAN)",
+        "Network devices: modem, router, switch, hub, network interface card (NIC), Wi-Fi access point",
+        "Wired and wireless media: Ethernet cable, optical fibre, Wi-Fi, Bluetooth",
+        "Advantages of networking: sharing files, printers and the Internet",
+        "Simple network topologies (bus, star, ring) at Class 5 level"
+      ]
+    },
+    "Conjunctions": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in the correct conjunction (and, but, or, so, because, although, unless, until)",
+        "Join two sentences with a conjunction",
+        "Correlative conjunctions (either...or, neither...nor, not only...but also)"
+      ]
+    },
+    "Contractions": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Short form of two words (do not -> don't, I will -> I'll)",
+        "Full form of a contraction",
+        "Which contraction is wrongly written"
+      ]
+    },
+    "Conversions": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Convert between units of length, weight, capacity, time or money",
+        "Arrange quantities given in different units in ascending or descending order",
+        "Which conversion is INCORRECT",
+        "Mixed units in a word problem (e.g. 2 kg 350 g + 1 kg 875 g)"
+      ]
+    },
+    "Data Handling": {
+      "figure": "often",
+      "figure_styles": [
+        "Bar graph (vertical or horizontal) with a scale; questions on totals, differences and ratios",
+        "Pictograph where one picture stands for several units (half picture = half the units)",
+        "Tally marks table; find the total or the most frequent item"
+      ],
+      "text_styles": [
+        "Table of data (sales, marks, rainfall) with a question on total, difference or average",
+        "Which statement about the data is NOT true"
+      ],
+      "tips": "Usually ask one question per figure, but questions can share a figure using directions in a practice set."
+    },
+    "Developments in IT": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Internet of Things (smart homes, smart lights), cloud computing, 3D printing, 5G",
+        "Augmented reality and virtual reality: which is which",
+        "Generative AI tools and chatbots: what they can and cannot do; checking facts",
+        "Cyber safety with new technology: strong passwords, two-factor authentication, digital footprint"
+      ],
+      "tips": "Keep to well-known, stable facts; avoid company news, version numbers and dates that change."
+    },
+    "Dialogues": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a dialogue between two or three people",
+        "Passage question (specific detail) based on a dialogue between two or three people",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Direction Sense": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Path drawn on a grid with a compass rose; find the final direction or distance"
+      ],
+      "text_styles": [
+        "Walks and turns: final direction faced after a series of left or right turns",
+        "Distance and direction of the end point from the start (keep to right angles; shortest distance using whole numbers like 3-4-5 or 6-8-10)",
+        "Shadows in the morning or evening: which way is a person facing",
+        "Relative positions of houses, trees or towns described in words",
+        "Turning by angles: 'turns 90 degrees clockwise then 135 degrees anticlockwise'"
+      ]
+    },
+    "Embedded Figures": {
+      "figure": "always",
+      "figure_styles": [
+        "Select the option in which figure (X) is embedded (same size and same orientation)",
+        "Select the option in which figure (X) is NOT embedded",
+        "Find the figure hidden in a complex figure"
+      ],
+      "text_styles": [],
+      "tips": "The hidden figure must appear in the same size and orientation. Draw it with the same stroke width as the rest."
+    },
+    "Evolution of Computers": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Early calculating devices in order: abacus, Napier's bones, Pascaline, Leibniz's stepped reckoner, Analytical Engine",
+        "Inventors: Charles Babbage (father of the computer), Ada Lovelace (first programmer), Blaise Pascal, John Napier, Herman Hollerith",
+        "Generations of computers: vacuum tubes, transistors, integrated circuits, microprocessors, artificial intelligence",
+        "ENIAC and other early electronic computers; size and speed then and now"
+      ]
+    },
+    "Fractions": {
+      "figure": "often",
+      "figure_styles": [
+        "What fraction of the figure is shaded",
+        "Fraction of a collection of objects drawn in a figure"
+      ],
+      "text_styles": [
+        "Equivalent fractions; like and unlike fractions",
+        "Compare and order simple fractions",
+        "Add and subtract like fractions",
+        "Fraction of a quantity (e.g. 3/4 of 36)"
+      ]
+    },
+    "Fractions and Decimals": {
+      "figure": "often",
+      "figure_styles": [
+        "What fraction of the figure is shaded (grids, circles, triangles divided into equal parts)",
+        "Fraction or decimal marked on a number line",
+        "Decimal grid (10 x 10 squares) shaded; write the decimal"
+      ],
+      "text_styles": [
+        "Equivalent fractions and fractions in lowest terms; mixed numbers and improper fractions",
+        "Compare and order fractions or decimals (like and unlike denominators)",
+        "Add, subtract or multiply fractions; fraction of a quantity",
+        "Decimals: place value, convert fractions to decimals, add and subtract, multiply by 10 or 100",
+        "Word problem on fractions of money, time or distance"
+      ]
+    },
+    "Fundamentals of Computer": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Which of these is an input device / output device / both input and output",
+        "Parts of the CPU: ALU, Control Unit and Memory Unit; which part does what",
+        "Hardware and software: classify the items; system software vs application software",
+        "Characteristics of a computer (speed, accuracy, diligence, storage, GIGO)",
+        "IPO cycle: input, process, output, storage - order of steps for a task"
+      ]
+    },
+    "Gender": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Opposite gender of a noun (nephew - niece, lion - lioness)",
+        "Which pair is NOT correct",
+        "Common gender nouns (teacher, child, friend)"
+      ]
+    },
+    "Geometrical Shapes": {
+      "figure": "always",
+      "figure_styles": [
+        "Count the triangles in a figure (squares with diagonals, triangles with medians, stars)",
+        "Count the squares or rectangles in a grid figure",
+        "Count straight lines, or count closed shapes of one kind inside a figure",
+        "Which option shows a shape with a given property (e.g. exactly two pairs of parallel sides)",
+        "Figure formed by joining given pieces; identify the completed shape"
+      ],
+      "text_styles": [],
+      "tips": "In the explanation, list or group the counted shapes (e.g. 'small: 8, made of two: 4, big: 1, total 13'). Keep counts at or below about 20."
+    },
+    "Geometrical Shapes and Solids": {
+      "figure": "always",
+      "figure_styles": [
+        "Faces, edges and vertices of a cube, cuboid, cylinder, cone, pyramid or prism drawn as a figure",
+        "Net of a cube or cuboid: which net forms a cube, or which face is opposite a given face",
+        "Dice: two or three positions of the same die are shown; find the number opposite a given number",
+        "Count the cubes in a stack drawn as a figure",
+        "Name the shape: solid drawn from given pieces"
+      ],
+      "text_styles": []
+    },
+    "Geometry": {
+      "figure": "often",
+      "figure_styles": [
+        "Name points, lines, line segments and rays in a figure",
+        "Identify the centre, radius and diameter of a circle in a figure",
+        "Count the sides, corners or diagonals of a polygon drawn as a figure"
+      ],
+      "text_styles": [
+        "Radius and diameter relationship (d = 2r)",
+        "Number of sides or diagonals of a polygon",
+        "Properties of triangles, squares and rectangles"
+      ]
+    },
+    "Greetings": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say in a situation that needs a greeting (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to make a greeting",
+        "Choose the best response to the speaker's sentence"
+      ]
+    },
+    "Hardware and Software": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Classify items as hardware or software",
+        "System software (operating systems) and application software",
+        "Which is NOT an application software",
+        "Utility software such as antivirus"
+      ]
+    },
+    "Homonyms and Homophones": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in the blanks with the correct homophones (e.g. there/their, piece/peace)",
+        "Same word, two meanings: in which sentence is the word used in a different sense",
+        "Pick the pair of words that sound the same but have different meanings"
+      ]
+    },
+    "IT Gadgets and Devices": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Identify a gadget from its description (smartwatch, fitness band, e-reader, VR headset, smart speaker, power bank, drone)",
+        "Which gadget uses GPS, Bluetooth or a touchscreen",
+        "Odd one out among gadgets",
+        "Barcode and QR code scanners; biometric devices (fingerprint, face, iris)"
+      ]
+    },
+    "Idioms": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Meaning of an idiom used in a sentence",
+        "Choose the idiom that fits a situation",
+        "Fill in the missing word of an idiom (e.g. as busy as a ___)"
+      ]
+    },
+    "Input and Output Devices": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Classify devices as input, output or both",
+        "Which device is used for a given job (scanner, webcam, projector, printer, microphone)",
+        "Odd one out among input and output devices",
+        "Pointing devices: mouse, touchpad, joystick, light pen"
+      ]
+    },
+    "Internet": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Web browser vs search engine; examples (browser: Chrome, Edge, Firefox; search engine: Google, Bing)",
+        "Parts of a URL (https, domain name, .in, .org, .gov, .edu)",
+        "Email: To, Cc, Bcc, Subject, attachment, Inbox, Drafts, Spam; the '@' symbol",
+        "Downloading and uploading; ISP; World Wide Web (Tim Berners-Lee)",
+        "Cyber safety and netiquette: strong passwords, never share OTPs, cyberbullying, phishing"
+      ]
+    },
+    "Internet and its Uses": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Uses of the Internet: email, online shopping, e-learning, video calls, online banking",
+        "Web browser and search engine examples",
+        "What is a website and a web page",
+        "Safe use of the Internet for children"
+      ]
+    },
+    "Introductions": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say in a situation that needs a introduction (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to make a introduction",
+        "Choose the best response to the speaker's sentence"
+      ]
+    },
+    "Invitations": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a birthday or event invitation card with a short reply note",
+        "Passage question (specific detail) based on a birthday or event invitation card with a short reply note",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Jumbled Words": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Rearrange the jumbled parts P, Q, R, S to make a meaningful sentence",
+        "Rearrange the jumbled letters to form a word that fits the clue"
+      ]
+    },
+    "Length, Weight and Capacity": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Ruler, weighing balance or measuring jug drawn with readings"
+      ],
+      "text_styles": [
+        "Convert between km, m, cm, mm; kg, g, mg; L, mL and add or subtract in mixed units",
+        "Word problem: total length of ribbon cut into pieces, weight of bags, capacity of bottles",
+        "Compare measurements given in different units and arrange them",
+        "Which unit is most suitable to measure a given object"
+      ]
+    },
+    "Letters": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a informal letter or email to a friend or relative",
+        "Passage question (specific detail) based on a informal letter or email to a friend or relative",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Logical Sequence of Words": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Arrange given words in a meaningful sequence (life cycle, process, size, time)",
+        "Arrange words as they appear in the dictionary",
+        "Arrange units from smallest to largest (e.g. millimetre, centimetre, metre, kilometre)",
+        "Which word comes in the middle or at the end when arranged meaningfully"
+      ]
+    },
+    "MS-Paint": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Which tool does a job (Fill with colour, Color picker, Magnifier, Eraser, Text, Brushes, Shapes, Select)",
+        "Default file format in Paint (PNG) and other formats (JPEG, BMP, GIF)",
+        "Primary and secondary colour (Color 1 and Color 2), Rotate and Resize options",
+        "Groups on the Home tab of Paint: Clipboard, Image, Tools, Brushes, Shapes, Colors"
+      ]
+    },
+    "MS-PowerPoint": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Parts of the PowerPoint window: Slide pane, Slides (thumbnail) pane, Notes pane, status bar, view buttons",
+        "Running a slide show: F5 (from beginning), Shift+F5 (from current slide), Esc (end), B (black screen), W (white screen)",
+        "Presentation Views: Normal (default), Outline View, Slide Sorter, Notes Page, Reading View",
+        "Insert tab: Images (Pictures, Screenshot, Photo Album), Illustrations (Shapes, SmartArt, Chart), Text (Text Box, Header & Footer, WordArt), Media (Video, Audio)",
+        "Header & Footer dialog: Date and time, Slide number, Footer, Don't show on title slide; New slide (Ctrl+M)"
+      ],
+      "tips": "Only MS-PowerPoint 2016 facts."
+    },
+    "MS-Word": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Paragraph group shortcuts: Ctrl+L, Ctrl+E, Ctrl+R, Ctrl+J; line spacing; indents; bullets and numbering; Show/Hide (Ctrl+Shift+8)",
+        "Drop Cap: Insert tab > Text group; options None, Dropped, In margin; default lines to drop = 3",
+        "Document views on the View tab: Read Mode, Print Layout (default), Web Layout, Outline, Draft",
+        "Insert tab groups: Illustrations (Pictures, Online Pictures, Shapes, SmartArt, Chart, Screenshot), Text (Text Box, WordArt, Drop Cap), Symbols, Media (Online Video)",
+        "Header and Footer: Insert tab > Header & Footer group; Page Number; Different First Page; double-click to edit; Close Header and Footer"
+      ],
+      "tips": "Only MS-Word 2016 facts."
+    },
+    "MS-Word Editing Tools": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Font group: bold (Ctrl+B), italic (Ctrl+I), underline (Ctrl+U), font size, font colour, text highlight, change case (Shift+F3)",
+        "Format Painter (Clipboard group): copy formatting; double-click to apply many times",
+        "Find (Ctrl+F) opens the Navigation pane; Replace (Ctrl+H); Go To (Ctrl+G)",
+        "Spelling and Grammar (F7) on the Review tab; Thesaurus (Shift+F7); red wavy underline for spelling errors",
+        "Undo (Ctrl+Z), Redo (Ctrl+Y), Cut, Copy and Paste"
+      ],
+      "tips": "Only MS-Word 2016 facts."
+    },
+    "Memory": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Units of memory in order: bit, nibble, byte, KB, MB, GB, TB (1 KB = 1024 bytes)",
+        "Convert memory units (e.g. 2 GB = ? MB)",
+        "Primary memory (RAM, ROM, cache) vs secondary memory; volatile vs non-volatile",
+        "Which memory is fastest / temporary / permanent"
+      ]
+    },
+    "Memory and Storage": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Units of memory in order and simple conversions",
+        "RAM and ROM: which is temporary",
+        "Storage devices: hard disk, pen drive, CD, DVD, memory card",
+        "Which device stores the most data"
+      ]
+    },
+    "Menus": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a menu card given as a table with prices and a short dialogue at a restaurant",
+        "Passage question (specific detail) based on a menu card given as a table with prices and a short dialogue at a restaurant",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Messages": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a short message, note or SMS chain",
+        "Passage question (specific detail) based on a short message, note or SMS chain",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Mirror Images": {
+      "figure": "always",
+      "figure_styles": [
+        "Mirror image of a figure with the mirror placed on the right (vertical line MN)",
+        "Mirror image of a word, number or combination of letters and digits",
+        "Mirror image of a clock: what time does the mirror show"
+      ],
+      "text_styles": [],
+      "tips": "Class 4 level: simple figures with 2 or 3 elements."
+    },
+    "Mirror and Water Images": {
+      "figure": "always",
+      "figure_styles": [
+        "Mirror image of a figure when a mirror is placed along line MN (vertical mirror on the right)",
+        "Water image of a figure (reflection in water, mirror below the figure)",
+        "Mirror image of a clock: the time shown in the mirror",
+        "Mirror image of a word or number written in capital letters (draw letters as SVG text with a flip transform)"
+      ],
+      "text_styles": [],
+      "tips": "Options should include the correct image, the water image instead of the mirror image, a 180-degree rotation and the original or another near miss."
+    },
+    "Money": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Bill with items, quantities and rates (a table); find the total or the change returned",
+        "Convert rupees and paise; add and subtract money with decimals",
+        "Unit rate: cost of one item from the cost of many, then cost of a different number",
+        "Profit or loss in simple terms (cost price and selling price)",
+        "Saving money each week or month; how long to save a target amount"
+      ]
+    },
+    "Multimedia": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Elements of multimedia: text, images, audio, video, animation",
+        "File extensions: .mp3 and .wav (audio), .mp4 and .avi (video), .jpg and .png (image), .gif (animation)",
+        "Uses of multimedia in education, entertainment and advertising",
+        "Hardware needed for multimedia (speakers, microphone, webcam)"
+      ]
+    },
+    "News Headlines": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a set of 4 or 5 news headlines with one short news item",
+        "Passage question (specific detail) based on a set of 4 or 5 news headlines with one short news item",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Nouns": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Identify the type of noun (common, proper, collective, abstract, material)",
+        "Collective nouns (a herd of, a swarm of, a bunch of)",
+        "Abstract noun formed from an adjective or verb (brave -> bravery)",
+        "Countable and uncountable nouns (much / many, a few / a little)",
+        "Possessive nouns (children's, girls')"
+      ]
+    },
+    "Number Sense (7 and 8 digit numbers)": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Number line or place-value chart with 7- or 8-digit numbers"
+      ],
+      "text_styles": [
+        "Greatest or smallest 7- or 8-digit number using given digits (with or without repetition, with conditions)",
+        "Rounding off to the nearest thousand, ten thousand, lakh or crore",
+        "Predecessor and successor; comparing and ordering large numbers",
+        "Difference between the largest and smallest numbers from given digits",
+        "Number of 7-digit numbers in a range; even or odd numbers formed from digits"
+      ]
+    },
+    "Number Sense (more than 4 digit numbers)": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Abacus or place-value chart with 5- or 6-digit numbers"
+      ],
+      "text_styles": [
+        "Greatest or smallest 5- or 6-digit number from given digits",
+        "Rounding off to the nearest ten, hundred or thousand",
+        "Comparing and ordering 5- and 6-digit numbers",
+        "Predecessor, successor and the number between two numbers",
+        "Even and odd numbers formed from given digits"
+      ]
+    },
+    "Numerals and Number Names": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Abacus or place-value chart showing a number; read the number or its number name"
+      ],
+      "text_styles": [
+        "Number name in the Indian system (lakh, crore) or the international system (million)",
+        "Write the numeral for a number name with zeros in tricky places",
+        "Roman numerals: convert, compare or find the wrong Roman numeral (I, V, X, L, C, D, M)",
+        "Place value and face value of a digit; difference or product of place values",
+        "Expanded form and short form"
+      ]
+    },
+    "One-word Substitution": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "One word for a group of words (a person who writes books = author)",
+        "Which phrase matches the given word",
+        "Places and homes: one word (a place where bees are kept = apiary)"
+      ]
+    },
+    "Parts of Computer": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Main parts: monitor, keyboard, mouse, CPU cabinet, speakers; what each does",
+        "Which part is called the brain of the computer",
+        "Keys on the keyboard: Enter, Backspace, Delete, Shift, Caps Lock, Spacebar, arrow keys, function keys",
+        "Mouse actions: click, double-click, right-click, drag and drop"
+      ]
+    },
+    "Patterns": {
+      "figure": "often",
+      "figure_styles": [
+        "Figure series: four or five problem figures that change by a fixed rule (rotation by 45 or 90 degrees, adding one element, moving a dot clockwise); options are four answer figures",
+        "Missing number in a figure: numbers in circles, triangles or a 3x3 grid follow one rule (row sums, products, centre = sum of corners); find the number in place of '?'",
+        "Figure matrix: 3x3 grid of small figures with one cell '?'; pick the figure that completes the grid",
+        "Dot or matchstick pattern: figures 1, 2, 3 are drawn; find how many dots or sticks are in figure N"
+      ],
+      "text_styles": [
+        "Number series with one missing term ('?') using +, x, squares, alternating or two interleaved series",
+        "Letter series or letter-number series (e.g. B2, E5, H8, ?)",
+        "Wrong term in a number series: find the number that does NOT fit",
+        "N-th term or 'how many terms' question built on a simple series"
+      ]
+    },
+    "Perimeter": {
+      "figure": "often",
+      "figure_styles": [
+        "Perimeter of a figure with side lengths marked",
+        "Perimeter of a shape drawn on a grid of unit squares"
+      ],
+      "text_styles": [
+        "Perimeter of a rectangle, square or triangle from its sides",
+        "Side of a square from its perimeter",
+        "Cost of fencing at a rate per metre"
+      ]
+    },
+    "Perimeter and Area": {
+      "figure": "often",
+      "figure_styles": [
+        "Perimeter of a rectilinear (L or T shaped) figure with side lengths marked",
+        "Area by counting squares on a grid (full and half squares)",
+        "Area of a rectangle or square drawn with dimensions; area of a path or border"
+      ],
+      "text_styles": [
+        "Perimeter of a rectangle or square from its sides; side from the perimeter",
+        "Cost of fencing a field at a rate per metre or tiling a floor at a rate per square metre",
+        "Number of square tiles needed to cover a floor",
+        "Compare areas or perimeters of two shapes",
+        "Wire bent from one shape into another (same perimeter)"
+      ]
+    },
+    "Possible Combinations": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Paths along a grid or road map from A to B; count the different routes"
+      ],
+      "text_styles": [
+        "Outfits from shirts and trousers (multiply the choices)",
+        "Handshakes or matches when each person meets every other person once",
+        "Numbers formed from given digits with or without repetition",
+        "Choosing two items from a list: how many ways",
+        "Arrangements of three letters or three friends in a row"
+      ]
+    },
+    "Prepositions": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in the correct preposition (in, on, at, by, with, for, since, from)",
+        "Prepositions of time and place",
+        "Pairs of blanks with prepositions (table options)",
+        "Preposition that goes with a word (fond of, afraid of, good at)"
+      ]
+    },
+    "Pronouns": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Choose the correct pronoun (personal, possessive, reflexive, relative, demonstrative)",
+        "who / whom / whose / which / that in a sentence",
+        "Identify the kind of pronoun in bold",
+        "Reflexive pronouns (myself, themselves) in a sentence"
+      ]
+    },
+    "Proverbs and Idioms": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Complete the proverb (A stitch in time ___)",
+        "Meaning of a proverb or idiom",
+        "Choose the proverb that fits a situation"
+      ]
+    },
+    "Punctuation": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Select the correctly punctuated sentence",
+        "Use of capital letters, commas, apostrophes, question marks",
+        "Punctuation of direct speech (inverted commas)",
+        "Which sentence uses the apostrophe correctly"
+      ]
+    },
+    "Puzzle Test": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Seating in a circle facing the centre drawn as a figure with some names; find a position",
+        "Magic square or number grid: find the missing number"
+      ],
+      "text_styles": [
+        "Seating in a row facing North or South: who sits between, at the ends, or to the immediate left",
+        "Blood relations: 'Pointing to a photograph, Rina said ...'; find the relation",
+        "Comparison puzzle with three or four facts (who is the tallest, who scored the least)",
+        "Table puzzle: five children, their favourite colours and sports; find who likes what",
+        "Number puzzle: find the number from clues about digits"
+      ],
+      "tips": "Make sure the clues give exactly one arrangement. Write the final arrangement in the explanation."
+    },
+    "Question Tags": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Choose the correct question tag (She is ready, isn't she?)",
+        "Tags for sentences with negative words (never, nobody)",
+        "Tags for imperative sentences (Open the door, will you?)"
+      ]
+    },
+    "Ranking Test": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Total in a row from positions from both ends (total = left + right - 1)",
+        "Position from the other end",
+        "Two people interchange places; find the new position or the total",
+        "How many people between two people in a row",
+        "Ordering by height, weight or marks from comparisons (who is the third tallest)",
+        "Ranks in a class with some failing or absent students"
+      ]
+    },
+    "Reading Comprehension": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Achievers-level reading: a short paragraph (60 to 90 words) printed in the stem; ask for the best summary or title",
+        "Achievers-level reading: short paragraph; which statement is NOT true according to it",
+        "Achievers-level reading: short paragraph; infer the feeling or reason of a character"
+      ],
+      "tips": "Achievers reading questions are self-contained: put the paragraph in the question text, not in 'passages'."
+    },
+    "Refusals": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say in a situation that needs a polite refusal (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to make a polite refusal",
+        "Choose the best response to the speaker's sentence"
+      ]
+    },
+    "Reported Speech": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Choose the correct indirect (reported) form of a direct sentence",
+        "Change reported speech into direct speech",
+        "Reporting verbs (said, told, asked, ordered, requested)"
+      ]
+    },
+    "Reports": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a short news report about a school or town event",
+        "Passage question (specific detail) based on a short news report about a school or town event",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Requests": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say in a situation that needs a request (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to make a request",
+        "Choose the best response to the speaker's sentence"
+      ]
+    },
+    "Robotics": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Parts of a robot: sensors (sense), controller (brain), actuators or motors (move), end effector or gripper, power supply",
+        "Word 'robot' from Karel Capek's play R.U.R.; 'robotics' and Asimov's three laws of robotics",
+        "Uses of robots: factories, space (Mars rovers, Pragyan rover of Chandrayaan-3), surgery, homes (robot vacuum cleaner)",
+        "Humanoid robots (e.g. Vyommitra of ISRO); drones as flying robots"
+      ]
+    },
+    "Singular and Plural": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Plural of nouns (-s, -es, -ies, -ves, irregular: mice, teeth, oxen)",
+        "Nouns that are always plural or the same in both forms (scissors, sheep, deer)",
+        "Which plural is INCORRECT"
+      ]
+    },
+    "Spellings": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Select the correctly spelt word",
+        "Select the INCORRECTLY spelt word",
+        "Fill in the missing letters of a word in a sentence (e.g. rec_ _ve)",
+        "Which sentence has a spelling mistake"
+      ]
+    },
+    "Storage Devices": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Which device stores the most data (pen drive, DVD, CD, hard disk); typical capacities",
+        "Optical, magnetic and flash (solid-state) storage: classify devices",
+        "Portable storage devices and their uses (memory card in a camera, pen drive)",
+        "Cloud storage as online storage (no device brand names needed)"
+      ]
+    },
+    "Stories": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a short story or fable",
+        "Passage question (specific detail) based on a short story or fable",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Symmetry": {
+      "figure": "always",
+      "figure_styles": [
+        "How many lines of symmetry does the figure have",
+        "Complete the figure so that the dotted line is a line of symmetry (choose the correct completion)",
+        "Which letter, digit or shape has exactly one, two or no lines of symmetry",
+        "Which figure has rotational symmetry of a given order"
+      ],
+      "text_styles": [],
+      "tips": "Draw letters as SVG text in a plain font only when the symmetry does not depend on the font."
+    },
+    "Synonyms": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Word most SIMILAR in meaning to the bold word in a sentence",
+        "Which word is NOT a synonym of the given word",
+        "Replace the bold word with a word of similar meaning"
+      ]
+    },
+    "Tenses": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in the correct form of the verb (simple, continuous, perfect in present, past and future)",
+        "Two blanks in one sentence with tense pairs (table options)",
+        "Identify the tense of a sentence",
+        "Find the error in tense usage",
+        "Choose the sentence in the past perfect or present perfect tense"
+      ],
+      "tips": "Do not use stative verbs (know, like, have meaning possess, want, belong) in continuous forms."
+    },
+    "Time": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Clock face showing a time; read the time or the time after a duration"
+      ],
+      "text_styles": [
+        "Convert hours and minutes; days and weeks",
+        "Elapsed time between two times (am/pm)",
+        "Time-table based question: how long does a period last",
+        "Calendar: date after a number of days"
+      ]
+    },
+    "Time and Temperature": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Thermometer reading in degree Celsius drawn as a figure",
+        "Clock face: find the time after a duration"
+      ],
+      "text_styles": [
+        "24-hour clock and 12-hour clock (am/pm) conversion",
+        "Elapsed time: start and end times of a train journey or school event",
+        "Convert hours, minutes and seconds; days, weeks, months and years",
+        "Rise or fall of temperature; difference between maximum and minimum temperatures",
+        "Calendar-based time problem (number of days between two dates)"
+      ]
+    },
+    "Time-tables": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a time-table (class, train, bus or event) given as a table plus a few lines of text",
+        "Passage question (specific detail) based on a time-table (class, train, bus or event) given as a table plus a few lines of text",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (purpose, tone or moral of the text)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
+    },
+    "Verbs": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Forms of verbs (base, past, past participle)",
+        "Helping verbs (is, are, was, were, has, have)",
+        "Subject-verb agreement",
+        "Choose the correct verb to fill the blank"
+      ]
+    },
+    "Verbs and Phrasal Verbs": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Meaning of a phrasal verb in a sentence (look after, give up, put off)",
+        "Fill in the correct phrasal verb",
+        "Subject-verb agreement",
+        "Forms of verbs (base, past, past participle)",
+        "Transitive and intransitive verbs, helping verbs and modals (can, could, may, must, should)"
+      ]
+    },
+    "Windows 11": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Parts of the desktop: Start button, taskbar (centred icons), notification area, Widgets, Search",
+        "Keyboard shortcuts: Win+D (show desktop), Win+E (File Explorer), Win+L (lock), Win+I (Settings), Alt+Tab, Win+Z (Snap layouts)",
+        "Snap layouts and Snap groups: hover over the Maximize button",
+        "File Explorer: create a new folder (Ctrl+Shift+N), rename (F2), delete and Recycle Bin, restore",
+        "Settings app and Quick Settings (Win+A); Task Manager (Ctrl+Shift+Esc)"
+      ],
+      "tips": "Only Windows 11 facts. Never mention older Windows versions."
+    }
+  }
+}

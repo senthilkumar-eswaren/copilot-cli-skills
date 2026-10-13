@@ -13,6 +13,12 @@
       "description": "Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX and PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream.",
       "version": "1.0.0",
       "source": "plugins/cbse-unit-test-prep"
+    },
+    {
+      "name": "sof-olympiad-prep",
+      "description": "Generates original SOF-style practice papers for Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a score log and weak-topic reports.",
+      "version": "1.0.0",
+      "source": "plugins/sof-olympiad-prep"
     }
   ]
 }

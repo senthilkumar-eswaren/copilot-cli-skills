@@ -1,0 +1,13 @@
+{
+  "name": "sof-olympiad-prep",
+  "description": "Generates original SOF-style practice papers for Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a score log and weak-topic reports.",
+  "version": "1.0.0",
+  "author": {
+    "name": "senthilkumar-eswaren"
+  },
+  "repository": "https://github.com/senthilkumar-eswaren/copilot-cli-skills",
+  "license": "MIT",
+  "keywords": ["sof", "olympiad", "imo", "ieo", "icso", "education", "exam-prep", "practice-papers", "pdf", "india"],
+  "category": "productivity",
+  "skills": "skills/"
+}
