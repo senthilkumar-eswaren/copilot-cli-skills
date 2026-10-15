@@ -3,7 +3,7 @@
 
     python3 assemble_paper.py --blueprint <blueprint.json | its folder | slug>
                               [--out PATH] [--force] [--strict]
-                              [--no-history] [--no-record]
+                              [--no-history] [--no-record] [--student LABEL]
 
 1. Loads blueprint.json and every part file listed in blueprint["parts"].
 2. Keeps the question ids each part owns; reports missing ids or broken files.
@@ -12,6 +12,9 @@
 4. Copies section, topic, class, difficulty and marks from the blueprint rows.
 5. Validates the merged paper with validate_paper.py against the blueprint.
 6. Saves <papers>/<slug>.json and records it in the question history.
+
+--student picks the child whose papers/ and history are used (default: the
+blueprint's student).
 
 Exit codes: 0 = saved, 1 = problems found (nothing saved), 2 = bad arguments.
 """
@@ -25,14 +28,14 @@ SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from sof_common import (die, papers_dir, read_json, record_paper,  # noqa: E402
+from sof_common import (base_home, die, papers_dir, read_json,  # noqa: E402
+                        record_paper, set_student, student_label, student_slug,
                         today, work_dir, write_json)
 import validate_paper  # noqa: E402
 
 META_KEYS = ("slug", "exam", "class", "level", "mode", "paper_no", "set_name",
              "name", "title", "topics", "seed", "time_minutes",
-             "total_questions", "total_marks", "sections", "created",
-             "exam_rules")
+             "total_questions", "total_marks", "sections", "created")
 # Keys that belong to the writers' spec rows, never to a finished question.
 SPEC_ONLY_KEYS = ("brief", "style", "tips", "prefix", "format_instructions")
 FAR = 10 ** 6
@@ -88,6 +91,13 @@ def resolve_blueprint(arg):
         cand = work_dir(arg, create=False) / "blueprint.json"
         if cand.is_file():
             return cand
+        if not student_label():
+            hits = sorted(base_home().glob("students/*/work/%s/blueprint.json" % arg))
+            if len(hits) == 1:
+                return hits[0]
+            if len(hits) > 1:
+                die("%s exists for several children (%s) - add --student LABEL"
+                    % (arg, ", ".join(h.parents[2].name for h in hits)))
     die("blueprint not found: %s (give blueprint.json, its folder or the "
         "paper slug)" % arg)
 
@@ -133,7 +143,7 @@ def collect_parts(bp):
         parts.append((part, doc, got))
     return parts, problems, notes
 
-FORMAT_NAMES = ("standard", "not", "statements", "table_i_ii", "roman_combo", "match")
+FORMAT_NAMES = ("standard", "not", "statements", "table_i_ii", "roman_combo", "match", "statements_c3")
 
 
 def norm_answer(a):
@@ -340,12 +350,24 @@ def main(argv=None):
                     help="skip the repeat check against earlier papers")
     ap.add_argument("--no-record", action="store_true",
                     help="do not add the paper to history")
+    ap.add_argument("--student",
+                    help="child's label (default: the blueprint's student)")
     args = ap.parse_args(argv)
+    set_student(args.student)
 
     bp_path = resolve_blueprint(args.blueprint)
     bp = read_json(bp_path)
     if not isinstance(bp, dict) or not bp.get("rows") or not bp.get("parts"):
         die("%s has no rows or parts - re-run blueprint.py" % bp_path)
+    bp_student = str(bp.get("student") or "").strip()
+    if bp_student:
+        if args.student is None and not student_label():
+            set_student(bp_student)
+            print("NOTE: using student '%s' from the blueprint" % bp_student)
+        elif student_slug() != student_slug(bp_student):
+            print("WARNING: blueprint was made for '%s' but the student is %s"
+                  % (bp_student, ("'%s'" % student_label()) if student_label()
+                     else "the default child"))
     slug = bp.get("slug") or bp_path.parent.name
     out = (Path(args.out).expanduser() if args.out
            else papers_dir() / ("%s.json" % slug))
@@ -390,6 +412,8 @@ def main(argv=None):
         if k in bp:
             paper[k] = bp[k]
     paper["slug"] = slug
+    if student_label():
+        paper["student"] = student_label()
     paper.setdefault("created", today())
     paper["academic_year"] = academic_year()
     paper["assembled"] = _dt.datetime.now().isoformat(timespec="seconds")
@@ -425,8 +449,10 @@ def main(argv=None):
     print("%s - %d questions, %s marks, %s minutes"
           % (paper.get("title", slug), len(questions),
              paper.get("total_marks", "?"), paper.get("time_minutes", "?")))
-    print("Next: python3 %s %s" % (SCRIPTS / "render_paper.py",
-                                   str(out) if args.out else slug))
+    nxt = str(out) if args.out else slug
+    if student_label():
+        nxt += " --student '%s'" % student_label()
+    print("Next: python3 %s %s" % (SCRIPTS / "render_paper.py", nxt))
     return 0
 
 

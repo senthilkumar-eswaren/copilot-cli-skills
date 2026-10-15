@@ -25,7 +25,7 @@ from sof_common import (LETTERS, TOKEN_RE, read_json, die, get_level,  # noqa: E
 
 DIFFICULTIES = ("easy", "medium", "hard")
 MODES = ("mock", "practice")
-ITEM_STYLES = ("statement", "roman", "bullet", "plain", "letter")
+ITEM_STYLES = ("statement", "roman", "bullet", "plain", "letter", "statement_num")
 KNOWN_KEYS = set("""id section section_name topic syllabus_class difficulty
 achievers marks question items item_style question_after table match figure
 figure_position passage_id options option_headers option_layout answer
@@ -374,6 +374,16 @@ def statement_ok(k, t):
     return 0 <= iff < it
 
 
+def statement_c3_ok(k, t):
+    if k == "A":
+        return "only" in t and "1" in t and "2" not in t
+    if k == "B":
+        return "only" in t and "2" in t and "1" not in t
+    if k == "C":
+        return "both" in t
+    return "neither" in t
+
+
 def check_format(rep, where, q, fmt):
     stem = q.get("question") if isinstance(q.get("question"), str) else ""
     items = q.get("items") if isinstance(q.get("items"), list) else []
@@ -391,6 +401,16 @@ def check_format(rep, where, q, fmt):
         if bad:
             rep.err(where, "%s: option(s) %s must use the fixed wording (A both true, B both false, "
                            "C I true and II false, D I false and II true)" % (tag, ", ".join(bad)))
+    elif fmt == "statements_c3":
+        if len(items) != 2:
+            rep.err(where, "%s: items must hold exactly Statement 1 and Statement 2" % tag)
+        if q.get("item_style") != "statement_num":
+            rep.warn(where, "%s: item_style should be \"statement_num\"" % tag)
+        bad = [k for k in LETTERS if not statement_c3_ok(k, plain_opt(opts.get(k)).lower())]
+        if bad:
+            rep.err(where, "%s: option(s) %s must use the fixed wording (A Only Statement 1, B Only Statement 2, "
+                           "C Both Statement 1 and Statement 2, D Neither Statement 1 nor Statement 2)"
+                    % (tag, ", ".join(bad)))
     elif fmt == "table_i_ii":
         blob = " ".join(t for lbl, t in text_fields(q)
                         if not lbl.startswith("option") and lbl != "explanation")
@@ -637,6 +657,20 @@ def check_passages(rep, ctx, doc):
             for label, t in table_texts(p["table"]):
                 check_markup(rep, where, label, t)
         bp = ctx.bp_passages.get(pid)
+        fig = p.get("figure")
+        if fig is not None:
+            if not nonempty_text(fig):
+                rep.err(where, "figure must be an SVG string")
+            else:
+                errs, width = svg_check(fig)
+                for e in errs:
+                    rep.err(where, "figure SVG: %s" % e)
+                if width is not None and (width < 60 or width > 520):
+                    rep.warn(where, "figure is %gpx wide; keep it between 60 and 520px" % width)
+            if bp is not None and not bp.get("allow_figure"):
+                rep.warn(where, "has a figure but the blueprint did not ask for one")
+        elif bp is not None and bp.get("allow_figure"):
+            rep.err(where, "needs a picture (figure) - this is a Picture Reading passage")
         wr = words_range(bp.get("words")) if bp is not None else None
         if wr is not None and nonempty_text(text):
             n = len(strip_markup(text).split())

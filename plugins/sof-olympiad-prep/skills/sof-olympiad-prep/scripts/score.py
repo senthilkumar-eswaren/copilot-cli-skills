@@ -5,7 +5,7 @@ Examples
   score.py mark IMO_Class5_Mock_Paper_01 --answers "DDCA-DAB..." --minutes 55
   score.py IMO_Class5_Mock_Paper_01 -a "1D 2D 3C 4A ..."     (mark is the default)
   score.py mark paper.json --answers-file answers.txt --dry-run
-  score.py report [--exam IMO] [--name Riya]
+  score.py report [--exam IMO] [--student child3]
   score.py weak-topics --exam IMO        prints "Topic A; Topic B" for blueprint.py --topics
 
 Answer formats
@@ -15,6 +15,11 @@ Answer formats
   * a file: .txt in either format above, or .json (list, string or {"1": "A", ...})
   * --answers - reads the answers from standard input
 SOF papers have no negative marking: a wrong or skipped answer scores 0.
+
+Children
+  Each child has a separate score log. --student LABEL picks the child (before or
+  after the subcommand): mark uses the paper's child by default; report and
+  weak-topics use the default child unless --student is given.
 """
 import argparse
 import csv
@@ -28,10 +33,11 @@ from collections import OrderedDict
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from sof_common import (EXAMS, LETTERS, attempts_path, die, load_paper,  # noqa: E402
-                        marks_for, norm_exam, paper_footer_label, paper_title,
-                        prep_home, scores_csv_path, strip_markup, today,
-                        topic_lookup)
+from sof_common import (EXAMS, LETTERS, attempts_path, base_home, die,  # noqa: E402
+                        get_level, load_paper, load_students, marks_for, norm_exam,
+                        paper_footer_label, paper_title, prep_home, scores_csv_path,
+                        set_student, strip_markup, student_desc, student_label,
+                        student_slug, today, topic_lookup)
 
 SUBCOMMANDS = ("mark", "report", "weak-topics")
 CSV_FIELDS = ["date", "time", "slug", "exam", "mode", "level", "class", "paper_no",
@@ -412,6 +418,39 @@ def _dq(s):
     return '"' + re.sub(r'([\\"$`])', r'\\\1', s) + '"'
 
 
+def _student_opt():
+    lab = student_label()
+    return " --student " + shlex.quote(lab) if lab else ""
+
+
+def _for_child():
+    lab = student_label()
+    return " for " + student_desc(lab) if lab else ""
+
+
+def _nonempty(p):
+    return p.is_file() and p.stat().st_size > 0
+
+
+def _hint_other_children(file=None):
+    """Point to the other children's logs when the selected child has none."""
+    file = file or sys.stdout
+    name, me, found = attempts_path().name, student_slug(), []
+    root = base_home()
+    if me and _nonempty(root / name):
+        found.append("the default child (--student '')")
+    sdir = root / "students"
+    if sdir.is_dir():
+        known = load_students()
+        for d in sorted(sdir.iterdir()):
+            if d.is_dir() and d.name != me and _nonempty(d / name):
+                e = known.get(d.name)
+                lab = (e.get("label") if isinstance(e, dict) else None) or d.name
+                found.append("'%s' (--student %s)" % (lab, shlex.quote(lab)))
+    if found:
+        print("Attempts are logged for " + ", ".join(found) + ".", file=file)
+
+
 def suggest_cmd(exam, cls, topics):
     bp, home = BLUEPRINT, os.path.expanduser("~")
     if bp.startswith(home + os.sep):
@@ -422,6 +461,9 @@ def suggest_cmd(exam, cls, topics):
             parts += ["--class", str(cls)]
     except (TypeError, ValueError):
         pass
+    lab = student_label()
+    if lab:
+        parts += ["--student", shlex.quote(lab)]
     # "; " because some topic names contain commas (e.g. "Length, Weight and Capacity")
     return " ".join(parts) + " --topics " + _dq("; ".join(topics))
 
@@ -430,9 +472,13 @@ def cmd_report(args):
     exam = norm_exam(args.exam) if args.exam else None
     atts = _filter(load_attempts(), exam, args.name)
     if not atts:
-        print("No attempts logged yet%s in %s.\nMark a finished paper first:  score.py mark <paper>"
-              ' --answers "DDCA-B..." --minutes 55' % (" for " + exam if exam else "", prep_home()))
+        print("No %sattempts logged yet%s in %s.\nMark a finished paper first:  score.py mark <paper>"
+              ' --answers "DDCA-B..." --minutes 55%s' % (exam + " " if exam else "", _for_child(),
+                                                         prep_home(), _student_opt()))
+        _hint_other_children()
         return 0
+    if student_label():
+        print("Progress for %s" % student_desc(student_label()))
     exams = [e for e in EXAMS if any(a.get("exam") == e for a in atts)]
     exams += sorted(set(str(a.get("exam")) for a in atts) - set(exams))
     w = 70
@@ -474,8 +520,13 @@ def cmd_report(args):
             print(" Suggested practice set:")
             print("   " + suggest_cmd(e, cls, weak))
         else:
-            print(" Every topic is at %g%% or better - next: a fresh full mock, or a Level 2"
-                  " paper (--level 2) if she has qualified." % args.threshold)
+            nxt = "a fresh full mock"
+            try:
+                get_level(e, 2, int(cls))
+                nxt += ", or a Level 2 paper (--level 2) after qualifying"
+            except (KeyError, TypeError, ValueError):
+                pass
+            print(" Every topic is at %g%% or better - next: %s." % (args.threshold, nxt))
     print("=" * w)
     return 0
 
@@ -484,8 +535,9 @@ def cmd_weak(args):
     exam = norm_exam(args.exam)
     ea = _filter(load_attempts(), exam, args.name)
     if not ea:
-        print("No %s attempts logged yet - mark a paper first (score.py mark ...)." % exam,
-              file=sys.stderr)
+        print("No %s attempts logged yet%s - mark a paper first (score.py mark ...)."
+              % (exam, _for_child()), file=sys.stderr)
+        _hint_other_children(sys.stderr)
         return 1
     rows = topic_stats(ea, args.recent, args.min_qs)
     weak = weak_list(rows, exam, ea[-1].get("class") or 5, max(args.top, 1), args.threshold)
@@ -500,14 +552,14 @@ def cmd_weak(args):
 
 # ---------------------------------------------------------------- marking
 def cmd_mark(args):
-    paper, _path = load_paper(args.paper)
+    paper, _path = load_paper(args.paper, auto_student=(getattr(args, "student", None) is None))
     n = check_paper(paper)
     if args.minutes is not None and args.minutes <= 0:
         raise ValueError("--minutes must be a positive number")
     answers = parse_answers(answer_source(args), n)
     res, review = grade(paper, answers)
     res["minutes"] = args.minutes
-    res["name"] = (args.name or "").strip()
+    res["name"] = (args.name or student_label() or "").strip()
     res["answers"] = "".join(a or "-" for a in answers)
     logged = None if args.dry_run else log_attempt(res)
     if args.json:
@@ -521,9 +573,11 @@ def cmd_mark(args):
     print_result(res, review, args.minutes, not args.no_explanations)
     if logged:
         k, j = logged
-        print("Logged attempt #%d%s in %s" % (k, (" (attempt #%d at this paper)" % j) if j > 1 else "",
-                                             scores_csv_path()))
-        print("Progress: score.py report  |  weak topics: score.py weak-topics --exam %s" % res["exam"])
+        print("Logged attempt #%d%s%s in %s" % (k, (" (attempt #%d at this paper)" % j) if j > 1 else "",
+                                               _for_child(), scores_csv_path()))
+        so = _student_opt()
+        print("Progress: score.py report%s  |  weak topics: score.py weak-topics --exam %s%s"
+              % (so, res["exam"], so))
     else:
         print("(dry run - not logged)")
     return 0
@@ -532,15 +586,18 @@ def cmd_mark(args):
 def build_parser():
     ap = argparse.ArgumentParser(prog="score.py", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+    sp = argparse.ArgumentParser(add_help=False)
+    sp.add_argument("--student", help="child's label ('' = the default child; default: the paper's"
+                                      " child for mark, the default child for report and weak-topics)")
     sub = ap.add_subparsers(dest="cmd")
-    m = sub.add_parser("mark", help="mark one attempt and log it (default command)")
+    m = sub.add_parser("mark", parents=[sp], help="mark one attempt and log it (default command)")
     m.add_argument("paper", help="paper slug (e.g. IMO_Class5_Mock_Paper_01) or paper JSON path")
     g = m.add_mutually_exclusive_group(required=True)
     g.add_argument("-a", "--answers",
                    help='answers in order ("DDCA-B..."), pairs ("1D 2D 3C"), a file, or - (stdin)')
     g.add_argument("-f", "--answers-file", help="file with the answers (.txt or .json), or -")
     m.add_argument("-m", "--minutes", type=int, help="minutes taken (limit is usually 60)")
-    m.add_argument("--name", default="", help="student name (if several children share the log)")
+    m.add_argument("--name", default="", help="name stored with the attempt (default: the child's label)")
     m.add_argument("--dry-run", action="store_true", help="show the result but do not log it")
     m.add_argument("--json", action="store_true", help="print the result as JSON")
     m.add_argument("--no-explanations", action="store_true", help="list mistakes without explanations")
@@ -549,9 +606,9 @@ def build_parser():
             ("report", "progress per exam and the weakest topics", cmd_report, 5),
             ("weak-topics", 'print the weakest topics as "A; B" for blueprint.py --topics',
              cmd_weak, 4)):
-        p = sub.add_parser(name, help=hlp)
+        p = sub.add_parser(name, parents=[sp], help=hlp)
         p.add_argument("--exam", required=(name == "weak-topics"), help="IMO, IEO or ICSO")
-        p.add_argument("--name", default="", help="only this student's attempts")
+        p.add_argument("--name", default="", help="only attempts logged with this name")
         p.add_argument("--top", type=int, default=top, help="how many topics (default %d)" % top)
         p.add_argument("--threshold", type=float, default=70.0,
                        help="a topic is weak below this accuracy %% (default 70)")
@@ -565,14 +622,29 @@ def build_parser():
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    lead = []  # "--student X" given before the subcommand is moved after it
+    while argv and (argv[0] == "--student" or argv[0].startswith("--student=")):
+        if argv[0] != "--student":
+            lead.append(argv.pop(0))
+            continue
+        if len(argv) < 2 or argv[1] in SUBCOMMANDS:
+            die("--student needs a value (a child's label, or '' for the default child)")
+        lead.append("--student=" + argv[1])
+        del argv[:2]
     if not argv:
         build_parser().print_help()
         return 2
     if argv[0] not in SUBCOMMANDS and argv[0] not in ("-h", "--help"):
         argv.insert(0, "mark")
+    if argv[0] in SUBCOMMANDS:
+        argv[1:1] = lead
     fixed, i = [], 0
     while i < len(argv):
         t = argv[i]
+        if t == "--student" and i + 1 < len(argv):
+            fixed.append("--student=" + argv[i + 1])
+            i += 2
+            continue
         if t in ("-a", "--answers", "-f", "--answers-file") and i + 1 < len(argv):
             # glue the value on so answers starting with "-" (skipped Q1) are not read as options
             flag = "--answers=" if t in ("-a", "--answers") else "--answers-file="
@@ -582,6 +654,7 @@ def main(argv=None):
         fixed.append(t)
         i += 1
     args = build_parser().parse_args(fixed)
+    set_student(getattr(args, "student", None))
     try:
         return args.func(args)
     except (ValueError, OSError) as e:

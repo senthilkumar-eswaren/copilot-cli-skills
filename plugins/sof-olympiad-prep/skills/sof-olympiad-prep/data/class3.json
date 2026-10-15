@@ -1,0 +1,661 @@
+{
+  "class": 3,
+  "previous_class": 2,
+  "academic_year": "2026-27",
+  "source": {
+    "publisher": "Science Olympiad Foundation (SOF), https://sofworld.org/",
+    "pages": [
+      "https://sofworld.org/imo/syllabus-sample-papers/class-3",
+      "https://sofworld.org/ieo/syllabus-sample-papers/class-3",
+      "https://sofworld.org/icso/syllabus-sample-papers/class-3",
+      "https://sofworld.org/imo/syllabus-sample-papers/class-2",
+      "https://sofworld.org/ieo/syllabus-sample-papers/class-2",
+      "https://sofworld.org/icso/syllabus-sample-papers/class-2"
+    ],
+    "retrieved": "2026-10",
+    "note": "Patterns and syllabus text copied from the official SOF pages. Topic lists are the same syllabus split into short, plain names used for planning. Re-check the SOF site each year."
+  },
+  "notes": [
+    "Questions of level-I Olympiad exams will be 60% from the current class syllabus and 40% from the previous class syllabus. Questions in ACHIEVERS SECTION will be from current class syllabus only.",
+    "There is no negative marking.",
+    "All questions are multiple choice with four options (A), (B), (C), (D) and one correct answer.",
+    "Answers are marked on an OMR sheet.",
+    "SOF lists sections in its pattern table in PRIORITY order (Achievers first); this is believed to be the tie-break order for ranking. Papers print sections in order 1 to 4.",
+    "Classes 3 and 4 papers have 35 questions for 40 marks; Achievers questions carry 2 marks each."
+  ],
+  "passage_words": {
+    "current": "150-220",
+    "previous": "100-150"
+  },
+  "writing_guidance": [
+    "Class 3 level: use simple, everyday words and short sentences that an 8-year-old can read alone.",
+    "Class 3 level: keep numbers to at most 4 digits (up to 9999); never use lakh, crore or bigger place values.",
+    "Class 3 level: draw large, clear figures with only a few parts, and label everything the child needs to read.",
+    "Class 3 level: do not test Class 5 ideas such as decimals, angles in degrees, area, phrasal verbs, reported speech or passive voice."
+  ],
+  "exams": {
+    "IMO": {
+      "full_name": "International Mathematics Olympiad",
+      "subject": "Mathematics",
+      "exam_dates": [
+        "2026-10-23",
+        "2026-11-26",
+        "2026-12-10"
+      ],
+      "notes": [
+        "Level 2 is held for the top qualifiers of Level 1 (from Class 3 upwards)."
+      ],
+      "levels": {
+        "1": {
+          "time_minutes": 60,
+          "total_questions": 35,
+          "total_marks": 40,
+          "previous_class_share": 0.4,
+          "negative_marking": false,
+          "level_notes": [
+            "Questions of level-I Olympiad exams will be 60% from the current class syllabus and 40% from the previous class syllabus. Questions in ACHIEVERS SECTION will be from current class syllabus only."
+          ],
+          "sections": [
+            {
+              "no": 1,
+              "name": "Logical Reasoning",
+              "questions": 10,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Patterns",
+                  "Analogy",
+                  "Classification",
+                  "Alphabet Test",
+                  "Coding-Decoding",
+                  "Ranking Test",
+                  "Grouping of Figures and Figure Matrix",
+                  "Mirror Images",
+                  "Geometrical Shapes",
+                  "Embedded Figures",
+                  "Possible Combinations",
+                  "Clock and Calendar"
+                ],
+                "previous": [
+                  "Patterns",
+                  "Odd One Out",
+                  "Measuring Units",
+                  "Geometrical Shapes",
+                  "Analogy",
+                  "Ranking Test",
+                  "Grouping of Figures",
+                  "Embedded Figures",
+                  "Coding-Decoding"
+                ]
+              },
+              "syllabus_text": "Patterns, Analogy and Classification, Alphabet Test, Coding-Decoding, Ranking Test, Grouping of Figures and Figure Matrix, Mirror Images, Geometrical Shapes, Embedded Figures, Possible Combinations, Clock and Calendar.",
+              "previous_syllabus_text": "Patterns, Odd One Out, Measuring Units, Geometrical Shapes, Analogy, Ranking Test, Grouping of Figures, Embedded Figures, Coding-Decoding."
+            },
+            {
+              "no": 2,
+              "name": "Mathematical Reasoning",
+              "questions": 10,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Numerals and Number Names",
+                  "Number Sense (4-digit numbers)",
+                  "Computation Operations",
+                  "Fractions",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Geometry",
+                  "Data Handling"
+                ],
+                "previous": [
+                  "Numerals and Number Names",
+                  "Number Sense (3-digit numbers)",
+                  "Computation Operations",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Lines, Shapes and Solids",
+                  "Pictographs",
+                  "Patterns"
+                ]
+              },
+              "syllabus_text": "Numerals, Number Names, Number Sense (4-digit numbers), Computation Operations, Fractions, Length, Weight, Capacity, Temperature, Time, Money, Geometry, Data Handling.",
+              "previous_syllabus_text": "Numerals, Number Names, Number Sense (3-digit numbers), Computation Operations, Length, Weight, Capacity, Time, Temperature, Money, Lines, Shapes and Solids, Pictographs, Patterns."
+            },
+            {
+              "no": 3,
+              "name": "Everyday Mathematics",
+              "questions": 10,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Number Sense (4-digit numbers)",
+                  "Computation Operations",
+                  "Fractions",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Data Handling"
+                ],
+                "previous": [
+                  "Computation Operations",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Pictographs"
+                ]
+              },
+              "syllabus_text": "Syllabus as per Section – 2.",
+              "previous_syllabus_text": "Syllabus as per Section – 2."
+            },
+            {
+              "no": 4,
+              "name": "Achievers Section",
+              "questions": 5,
+              "marks_each": 2,
+              "achievers": true,
+              "topics": {
+                "current": [
+                  "Numerals and Number Names",
+                  "Number Sense (4-digit numbers)",
+                  "Computation Operations",
+                  "Fractions",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Geometry",
+                  "Data Handling"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Higher Order Thinking Questions - Syllabus as per Section – 2.",
+              "short_name": "Achievers"
+            }
+          ]
+        },
+        "2": {
+          "time_minutes": 60,
+          "total_questions": 35,
+          "total_marks": 40,
+          "previous_class_share": 0.0,
+          "negative_marking": false,
+          "level_notes": [
+            "Questions of level-II Olympiad exams will be from current class syllabus only. Questions in ACHIEVERS SECTION will be from current class syllabus only.",
+            "Assumption: the 60-minute duration and the extra reasoning topics (Patterns, Clock and Calendar) in the Mathematics section follow the style of past Level 2 papers."
+          ],
+          "sections": [
+            {
+              "no": 1,
+              "name": "Mathematics",
+              "questions": 30,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Numerals and Number Names",
+                  "Number Sense (4-digit numbers)",
+                  "Computation Operations",
+                  "Fractions",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Geometry",
+                  "Data Handling",
+                  "Patterns",
+                  "Clock and Calendar"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Numerals, Number Names, Number Sense (4-digit numbers), Computation Operations, Fractions, Length, Weight, Capacity, Temperature, Time, Money, Geometry, Data Handling."
+            },
+            {
+              "no": 2,
+              "name": "Achievers Section",
+              "questions": 5,
+              "marks_each": 2,
+              "achievers": true,
+              "topics": {
+                "current": [
+                  "Numerals and Number Names",
+                  "Number Sense (4-digit numbers)",
+                  "Computation Operations",
+                  "Fractions",
+                  "Length, Weight and Capacity",
+                  "Time and Temperature",
+                  "Money",
+                  "Geometry",
+                  "Data Handling"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Higher Order Thinking Questions - Class 3 syllabus.",
+              "short_name": "Achievers"
+            }
+          ]
+        }
+      }
+    },
+    "IEO": {
+      "full_name": "International English Olympiad",
+      "subject": "English",
+      "exam_dates": [
+        "2026-10-27",
+        "2026-11-17"
+      ],
+      "notes": [
+        "Level 2 is held for the top qualifiers of Level 1 (from Class 3 upwards)."
+      ],
+      "levels": {
+        "1": {
+          "time_minutes": 60,
+          "total_questions": 35,
+          "total_marks": 40,
+          "previous_class_share": 0.4,
+          "negative_marking": false,
+          "level_notes": [
+            "Questions of level-I Olympiad exams will be 60% from the current class syllabus and 40% from the previous class syllabus. Questions in ACHIEVERS SECTION will be from current class syllabus only."
+          ],
+          "sections": [
+            {
+              "no": 1,
+              "name": "Word and Structure Knowledge",
+              "questions": 15,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Homophones",
+                  "Collocations",
+                  "Spellings",
+                  "Vocabulary",
+                  "Synonyms",
+                  "Antonyms",
+                  "Gender",
+                  "Singular and Plural",
+                  "Proverbs and Idioms",
+                  "One-word Substitution",
+                  "Nouns",
+                  "Pronouns",
+                  "Verbs",
+                  "Adverbs",
+                  "Adjectives",
+                  "Articles",
+                  "Prepositions",
+                  "Tenses",
+                  "Conjunctions",
+                  "Punctuation",
+                  "Question Tags",
+                  "Jumbled Words"
+                ],
+                "previous": [
+                  "Collocations",
+                  "Spellings",
+                  "Synonyms",
+                  "Antonyms",
+                  "Picture Words",
+                  "Words Related to Animals",
+                  "Phrases",
+                  "Idioms",
+                  "Nouns",
+                  "Pronouns",
+                  "Verbs",
+                  "Adverbs",
+                  "Adjectives",
+                  "Articles",
+                  "Prepositions",
+                  "Conjunctions",
+                  "Contractions",
+                  "Word Order",
+                  "Punctuation",
+                  "Tenses"
+                ]
+              },
+              "syllabus_text": "Word Power : Homophones, Collocations, Spellings, Words related to animals, Household things, Clothes, Basic emotions, Food, Animals and Pets, etc., Synonyms and Antonyms, Gender, Number, Proverbs, Idioms, One Word, Nouns, Pronouns, Verbs, Adverbs, Adjectives, Articles, Prepositions, Simple Tenses, Conjunctions and Punctuation, Basic Questions, Question tags, Jumbled words, etc.",
+              "previous_syllabus_text": "Collocations, Spellings, Synonyms, Antonyms, Identify the word from the Picture, Words Related to Animals, Phrases, Idioms, Nouns, Pronouns, Verbs, Adverbs, Adjectives, Articles, Prepositions, Conjunctions, Contractions, Word order, Punctuation, Simple tenses."
+            },
+            {
+              "no": 2,
+              "name": "Reading",
+              "questions": 10,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Stories",
+                  "Anecdotes",
+                  "Picture Reading",
+                  "Time-tables",
+                  "Messages",
+                  "Invitations"
+                ],
+                "previous": [
+                  "Stories",
+                  "Dialogues",
+                  "Messages",
+                  "Invitations"
+                ]
+              },
+              "syllabus_text": "Search for and retrieve information from various text types like Stories, Anecdotes, etc., Understand information through pictures, Time-table format, etc., Acquire broad understanding of and look for specific information in short texts like messages, invitations, etc.",
+              "previous_syllabus_text": "Search for and retrieve information from various text types like stories, short dialogues, etc. Acquire broad understanding of and look for specific information in short texts like messages, invitations, etc."
+            },
+            {
+              "no": 3,
+              "name": "Spoken and Written Expression",
+              "questions": 5,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Apologies",
+                  "Greetings",
+                  "Introductions",
+                  "Requests"
+                ],
+                "previous": [
+                  "Thanking",
+                  "Greetings",
+                  "Asking Permission",
+                  "Introductions"
+                ]
+              },
+              "syllabus_text": "Ability to understand situation-based variations in functions like apology, greeting, introduction, request, etc.",
+              "previous_syllabus_text": "Ability to understand situation-based variations in functions like thanking, greeting, asking for permission, introducing (oneself), etc."
+            },
+            {
+              "no": 4,
+              "name": "Achievers Section",
+              "questions": 5,
+              "marks_each": 2,
+              "achievers": true,
+              "topics": {
+                "current": [
+                  "Homophones",
+                  "Collocations",
+                  "Spellings",
+                  "Vocabulary",
+                  "Synonyms",
+                  "Antonyms",
+                  "Gender",
+                  "Singular and Plural",
+                  "Proverbs and Idioms",
+                  "One-word Substitution",
+                  "Nouns",
+                  "Pronouns",
+                  "Verbs",
+                  "Adverbs",
+                  "Adjectives",
+                  "Articles",
+                  "Prepositions",
+                  "Tenses",
+                  "Conjunctions",
+                  "Punctuation",
+                  "Question Tags",
+                  "Jumbled Words",
+                  "Apologies",
+                  "Greetings",
+                  "Introductions",
+                  "Requests",
+                  "Reading Comprehension"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Higher Order Thinking Questions - Syllabus as per Sections 1, 2 and 3.",
+              "short_name": "Achievers"
+            }
+          ]
+        },
+        "2": {
+          "time_minutes": 60,
+          "total_questions": 35,
+          "total_marks": 40,
+          "previous_class_share": 0.0,
+          "negative_marking": false,
+          "level_notes": [
+            "Questions of level-II Olympiad exams will be from current class syllabus only. Questions in ACHIEVERS SECTION will be from current class syllabus only.",
+            "Assumption: 60-minute duration, as for Level 1."
+          ],
+          "sections": [
+            {
+              "no": 1,
+              "name": "Word and Structure Knowledge",
+              "questions": 20,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Homophones",
+                  "Collocations",
+                  "Spellings",
+                  "Vocabulary",
+                  "Synonyms",
+                  "Antonyms",
+                  "Gender",
+                  "Singular and Plural",
+                  "Proverbs and Idioms",
+                  "One-word Substitution",
+                  "Nouns",
+                  "Pronouns",
+                  "Verbs",
+                  "Adverbs",
+                  "Adjectives",
+                  "Articles",
+                  "Prepositions",
+                  "Tenses",
+                  "Conjunctions",
+                  "Punctuation",
+                  "Question Tags",
+                  "Jumbled Words"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Word Power : Homophones, Collocations, Spellings, Words related to animals, Household things, Clothes, Basic emotions, Food, Animals and Pets, etc., Synonyms and Antonyms, Gender, Number, Proverbs, Idioms, One Word, Nouns, Pronouns, Verbs, Adverbs, Adjectives, Articles, Prepositions, Simple Tenses, Conjunctions and Punctuation, Basic Questions, Question tags, Jumbled words, etc."
+            },
+            {
+              "no": 2,
+              "name": "Reading",
+              "questions": 10,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Stories",
+                  "Anecdotes",
+                  "Picture Reading",
+                  "Time-tables",
+                  "Messages",
+                  "Invitations"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Search for and retrieve information from various text types like Stories, Anecdotes, etc., Understand information through pictures, Time-table format, etc., Acquire broad understanding of and look for specific information in short texts like messages, invitations, etc."
+            },
+            {
+              "no": 3,
+              "name": "Achievers Section",
+              "questions": 5,
+              "marks_each": 2,
+              "achievers": true,
+              "topics": {
+                "current": [
+                  "Homophones",
+                  "Collocations",
+                  "Spellings",
+                  "Vocabulary",
+                  "Synonyms",
+                  "Antonyms",
+                  "Gender",
+                  "Singular and Plural",
+                  "Proverbs and Idioms",
+                  "One-word Substitution",
+                  "Nouns",
+                  "Pronouns",
+                  "Verbs",
+                  "Adverbs",
+                  "Adjectives",
+                  "Articles",
+                  "Prepositions",
+                  "Tenses",
+                  "Conjunctions",
+                  "Punctuation",
+                  "Question Tags",
+                  "Jumbled Words",
+                  "Reading Comprehension"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Higher Order Thinking Questions - Syllabus as per Sections 1 and 2.",
+              "short_name": "Achievers"
+            }
+          ]
+        }
+      }
+    },
+    "ICSO": {
+      "full_name": "International Computer Science Olympiad",
+      "subject": "Computer Science",
+      "exam_dates": [
+        "2026-12-17"
+      ],
+      "notes": [
+        "Questions are based on Windows 11 and MS-Office 2016.",
+        "ICSO has a single level (no Level 2)."
+      ],
+      "levels": {
+        "1": {
+          "time_minutes": 60,
+          "total_questions": 35,
+          "total_marks": 40,
+          "previous_class_share": 0.4,
+          "negative_marking": false,
+          "level_notes": [
+            "Questions of level-I Olympiad exams will be 60% from the current class syllabus and 40% from the previous class syllabus. Questions in ACHIEVERS SECTION will be from current class syllabus only.",
+            "Questions are based on Windows 11 and MS-Office 2016.",
+            "The SOF table prints Logical Reasoning as 5 questions × 2 marks, which would total 45; the stated total is 40, so this skill uses 5 × 1 (as for Classes 1 and 2)."
+          ],
+          "sections": [
+            {
+              "no": 1,
+              "name": "Logical Reasoning",
+              "questions": 5,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Patterns",
+                  "Analogy",
+                  "Classification",
+                  "Alphabet Test",
+                  "Coding-Decoding",
+                  "Ranking Test",
+                  "Grouping of Figures and Figure Matrix",
+                  "Mirror Images",
+                  "Geometrical Shapes",
+                  "Embedded Figures",
+                  "Possible Combinations",
+                  "Clock and Calendar"
+                ],
+                "previous": [
+                  "Patterns",
+                  "Odd One Out",
+                  "Measuring Units",
+                  "Geometrical Shapes",
+                  "Analogy",
+                  "Ranking Test",
+                  "Grouping of Figures",
+                  "Embedded Figures",
+                  "Coding-Decoding"
+                ]
+              },
+              "syllabus_text": "Patterns, Analogy and Classification, Alphabet Test, Coding-Decoding, Ranking Test, Grouping of Figures and Figure Matrix, Mirror Images, Geometrical Shapes, Embedded Figures, Possible Combinations, Clock and Calendar.",
+              "previous_syllabus_text": "Patterns, Odd One Out, Measuring Units, Geometrical Shapes, Analogy, Ranking Test, Grouping of Figures, Embedded Figures, Coding-Decoding."
+            },
+            {
+              "no": 2,
+              "name": "Computer Science",
+              "questions": 20,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Fundamentals of Computer",
+                  "Parts of Computer",
+                  "Uses of Computer",
+                  "Memory and Storage",
+                  "Input and Output Devices",
+                  "Internet",
+                  "MS-Paint",
+                  "MS-Word"
+                ],
+                "previous": [
+                  "Computer - a Smart Machine",
+                  "General Information about Computers",
+                  "Parts of Computer",
+                  "Uses of Computer",
+                  "Keyboard and Mouse",
+                  "MS-Paint"
+                ]
+              },
+              "syllabus_text": "Fundamentals of Computer (Features and Characteristics of Computer, Memory and Storage Devices, Parts of Computer, Uses of Computer), Input and Output Devices, Introduction to Internet, MS-Paint, Introduction to MS-Word (Opening, Closing, Saving and Printing a Word document, Components of MS-Word window, Editing commands like Cut, Copy, Paste, Undo and Redo, Moving in a document using Home and End Keys).",
+              "previous_syllabus_text": "Computer-a Smart Machine, General Information about Computers, Parts of Computer, Uses of Computer, Learning to use Keyboard and Mouse, MS-Paint."
+            },
+            {
+              "no": 3,
+              "name": "AI, Robotics and Information Technology",
+              "questions": 5,
+              "marks_each": 1,
+              "achievers": false,
+              "topics": {
+                "current": [
+                  "Artificial Intelligence",
+                  "Robotics",
+                  "IT Gadgets and Devices",
+                  "Apps and Computerisation",
+                  "Developments in IT"
+                ],
+                "previous": [
+                  "IT Gadgets and Devices",
+                  "Apps and Computerisation",
+                  "Developments in IT"
+                ]
+              },
+              "syllabus_text": "Introduction to AI, Robotics, IT Gadgets, Devices, Apps, Computerization, and other Developments in the Field of IT.",
+              "short_name": "AI, Robotics and IT",
+              "previous_syllabus_text": "IT Gadgets, Devices, Apps, Computerization, and other Developments in the Field of IT."
+            },
+            {
+              "no": 4,
+              "name": "Achievers Section",
+              "questions": 5,
+              "marks_each": 2,
+              "achievers": true,
+              "topics": {
+                "current": [
+                  "Fundamentals of Computer",
+                  "Parts of Computer",
+                  "Uses of Computer",
+                  "Memory and Storage",
+                  "Input and Output Devices",
+                  "Internet",
+                  "MS-Paint",
+                  "MS-Word",
+                  "Artificial Intelligence",
+                  "Robotics",
+                  "IT Gadgets and Devices",
+                  "Apps and Computerisation",
+                  "Developments in IT"
+                ],
+                "previous": []
+              },
+              "syllabus_text": "Higher Order Thinking Questions - Syllabus as per Sections 2 and 3.",
+              "short_name": "Achievers"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

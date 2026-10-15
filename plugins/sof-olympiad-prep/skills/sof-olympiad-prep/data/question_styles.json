@@ -1,5 +1,5 @@
 {
-  "_about": "Question styles per topic. 'figure' says how often a question on this topic carries a figure (always, often = about 2 in 3, sometimes = about 1 in 3, never). The blueprint picks a style from figure_styles when the question needs a figure and from text_styles otherwise. 'tips' are extra notes for the question writer.",
+  "_about": "Question styles per topic. 'figure' says how often a question on this topic carries a figure (always, often = about 2 in 3, sometimes = about 1 in 3, never). The blueprint picks a style from figure_styles when the question needs a figure and from text_styles otherwise. 'tips' are extra notes for the question writer. 'class_overrides' maps a class number (as a string) to any of figure, figure_styles, text_styles and tips; these replace the base values for papers of that class.",
   "topics": {
     "Active and Passive Voice": {
       "figure": "never",
@@ -11,6 +11,16 @@
       ]
     },
     "Adjectives": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Identify the describing word (adjective) in a sentence",
+            "Degrees of comparison (tall - taller - tallest; good - better - best)",
+            "Fill in the blank with a suitable adjective",
+            "Adjectives of number and quantity (some, many, few, three)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -21,6 +31,15 @@
       ]
     },
     "Adverbs": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Identify the adverb that tells how, when or where something happens",
+            "Fill in the correct adverb (slowly, loudly, today, here)",
+            "Form the adverb by adding -ly (quick -> quickly)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -31,6 +50,17 @@
       ]
     },
     "Alphabet Test": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Which letter comes just before, just after or between given letters",
+            "Which letter is N-th from the left or right in the English alphabet",
+            "Arrange words in dictionary (alphabetical) order and pick the word in a given position",
+            "How many vowels or consonants are in a short word",
+            "Fill in the missing letters in a part of the alphabet"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -43,6 +73,18 @@
       ]
     },
     "Analogy": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Figure analogy: (i) is to (ii) as (iii) is to ?; one simple change (shading swap, size change, adding one side or one line, a half turn)"
+          ],
+          "text_styles": [
+            "Number analogy using +, - or a times table up to 10 (e.g. 4 : 8 :: 6 : ?)",
+            "Letter-pair analogy (e.g. AB : CD :: EF : ?)",
+            "Word analogy (animal : young one, animal : home, worker : tool, part : whole, opposites)"
+          ]
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Figure analogy: figure (i) is to (ii) as (iii) is to ?; transformation by rotation, flip, shading swap or adding sides",
@@ -99,6 +141,15 @@
       ]
     },
     "Apps and Computerisation": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Which app is used for a task (maps, video calling, games, learning, payments)",
+            "Where computers help: ATM in a bank, ticket counter at a railway station, billing counter in a shop",
+            "Computerised vs manual work: which is faster and more accurate"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -118,6 +169,15 @@
       ]
     },
     "Artificial Intelligence": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Which of these is an example of AI (voice assistant, face unlock, chatbot, a smart speaker answering questions)",
+            "Smart machines that learn: which task needs AI",
+            "AI helpers at home and school (voice assistants, translation apps)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -127,7 +187,29 @@
         "AI in daily life: translation apps, spam filters, self-driving cars"
       ]
     },
+    "Asking Permission": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say when you need to ask for permission (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to ask for permission",
+        "Choose the best response to the speaker's sentence"
+      ]
+    },
     "Classification": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Odd figure out: four figures, three share a property (number of sides, shading, open or closed shape)"
+          ],
+          "text_styles": [
+            "Odd one out among numbers (even or odd, multiples of 2, 5 or 10, number of digits)",
+            "Odd one out among letter groups (vowels, letters in order)",
+            "Odd one out among words (fruits, vegetables, animals, colours, body parts, things in a house)"
+          ]
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Odd figure out: four figures, three share a property (number of sides, symmetry, shading, closed curve)"
@@ -140,6 +222,21 @@
       ]
     },
     "Clock and Calendar": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Clock face: read the time to 5 minutes, or find the time after some minutes or hours"
+          ],
+          "text_styles": [
+            "Read the time and choose a.m. or p.m.",
+            "Time after or before a duration in hours and minutes",
+            "Day of the week after N days (N up to 30)",
+            "Months: number of days in a month; the month that comes 3 months after a given month",
+            "Calendar page of one month: how many Sundays, the date of the second Monday"
+          ],
+          "tips": "Check every day/date result with python3 datetime. Class 3 level: no angles between the hands; for leap years only 'February has 28 or 29 days'."
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Clock face showing a time; find the angle between the hands or the time after some minutes"
@@ -155,6 +252,16 @@
       "tips": "Check every day/date result with python3 datetime."
     },
     "Coding-Decoding": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Letter shift by 1 or 2: if CAT is written as DBU, how is DOG written",
+            "Letters coded by their positions (A = 1, B = 2): the code for a short word",
+            "Symbol coding: each letter has a symbol or number; decode a short word",
+            "Reverse-order coding (CAT is written as TAC)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -176,6 +283,20 @@
       ]
     },
     "Computation Operations": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Missing digits in a column addition or subtraction drawn as a grid (up to 4 digits)"
+          ],
+          "text_styles": [
+            "Add or subtract 4-digit numbers with carrying or borrowing; word problems",
+            "Multiply a 2- or 3-digit number by a 1-digit number; times tables up to 10",
+            "Division as equal sharing or grouping; division facts with or without a remainder",
+            "Missing number in a number sentence (e.g. 45 + __ = 90)",
+            "Estimate a sum or difference to the nearest ten or hundred"
+          ]
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Missing digits in a column addition, subtraction or multiplication drawn as a grid",
@@ -190,6 +311,17 @@
         "Estimation of a sum, difference or product to the nearest hundred or thousand"
       ]
     },
+    "Computer - a Smart Machine": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Pictures of four machines: which one is a computer, or which one works on instructions"
+      ],
+      "text_styles": [
+        "Features of a computer (speed, accuracy, memory, never gets tired)",
+        "What a computer can and cannot do by itself",
+        "Machine or smart machine: which is which"
+      ]
+    },
     "Computer Networks": {
       "figure": "never",
       "figure_styles": [],
@@ -202,6 +334,14 @@
       ]
     },
     "Conjunctions": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Fill in the correct conjunction (and, but, or, so, because)",
+            "Join two sentences with and, but or because"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -230,6 +370,20 @@
       ]
     },
     "Data Handling": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Pictograph with a key (1 picture = 2, 5 or 10)",
+            "Tally marks table; find the total or the most or least frequent item",
+            "Simple bar graph with a scale of 1, 2 or 5"
+          ],
+          "text_styles": [
+            "Table of data with a question on total, most, least or difference",
+            "Which statement about the data is NOT true"
+          ],
+          "tips": "Usually ask one question per figure, but questions can share a figure using directions in a practice set. Class 3 level: no averages or ratios."
+        }
+      },
       "figure": "often",
       "figure_styles": [
         "Bar graph (vertical or horizontal) with a scale; questions on totals, differences and ratios",
@@ -243,6 +397,15 @@
       "tips": "Usually ask one question per figure, but questions can share a figure using directions in a practice set."
     },
     "Developments in IT": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "New gadgets that make life easy (smart TV, smart speaker, robot vacuum cleaner, smartwatch)",
+            "Then and now: letter -> email, landline -> mobile phone, cassette -> music app",
+            "Online classes and video calls"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -279,6 +442,11 @@
       ]
     },
     "Embedded Figures": {
+      "class_overrides": {
+        "3": {
+          "tips": "The hidden figure must appear in the same size and orientation. Draw it with the same stroke width as the rest. Class 3 level: use simple figures made of 3 to 5 lines or shapes."
+        }
+      },
       "figure": "always",
       "figure_styles": [
         "Select the option in which figure (X) is embedded (same size and same orientation)",
@@ -299,6 +467,16 @@
       ]
     },
     "Fractions": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Name the fraction (1/2, 1/3, 1/4, 2/3, 3/4) shown in words or numbers; numerator and denominator",
+            "Compare like fractions or unit fractions",
+            "Fraction of a small collection (1/2 of 12, 1/4 of 20)",
+            "Halves, thirds and quarters in daily life (half a roti, a quarter of an hour)"
+          ]
+        }
+      },
       "figure": "often",
       "figure_styles": [
         "What fraction of the figure is shaded",
@@ -327,6 +505,17 @@
       ]
     },
     "Fundamentals of Computer": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Features of a computer (fast, accurate, stores data, never gets tired)",
+            "What a computer can and cannot do (it cannot think or feel by itself)",
+            "IPO: input, process, output - order of steps for a task",
+            "Hardware and software: which is which (simple examples)",
+            "Memory and storage devices: which one stores data"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -346,7 +535,30 @@
         "Common gender nouns (teacher, child, friend)"
       ]
     },
+    "General Information about Computers": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Picture of a computer set-up or computer lab; answer a question about it"
+      ],
+      "text_styles": [
+        "Father of computers (Charles Babbage)",
+        "Places where computers are used",
+        "Do's and don'ts in the computer lab",
+        "Correct order to switch a computer on and off"
+      ]
+    },
     "Geometrical Shapes": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Count the triangles, squares or rectangles in a simple figure (total at most 10)",
+            "Count the straight lines or the curved lines in a figure",
+            "Which option shows a shape with a given property (3 corners, 4 equal sides, no corners)",
+            "Shape formed by joining two given pieces"
+          ],
+          "tips": "In the explanation, list or group the counted shapes. Class 3 level: keep counts at or below 10."
+        }
+      },
       "figure": "always",
       "figure_styles": [
         "Count the triangles in a figure (squares with diagonals, triangles with medians, stars)",
@@ -370,6 +582,21 @@
       "text_styles": []
     },
     "Geometry": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Name the shape, or count its sides and corners, in a figure",
+            "Open and closed figures; straight and curved lines in a figure",
+            "Faces, edges and corners of a solid (cube, cuboid, cylinder, cone, sphere) drawn as a figure"
+          ],
+          "text_styles": [
+            "Number of sides and corners of a triangle, square, rectangle or circle",
+            "Which solid can roll, slide or both",
+            "Everyday objects that look like a cube, cuboid, cylinder, cone or sphere"
+          ],
+          "tips": "Class 3 level: no rays, diagonals or angles."
+        }
+      },
       "figure": "often",
       "figure_styles": [
         "Name points, lines, line segments and rays in a figure",
@@ -392,6 +619,22 @@
         "Choose the best response to the speaker's sentence"
       ]
     },
+    "Grouping of Figures": {
+      "figure": "always",
+      "figure_styles": [
+        "Numbered figures: choose the option that groups them correctly (by shape, sides or shading)",
+        "Find the two figures that are exactly alike"
+      ],
+      "text_styles": []
+    },
+    "Grouping of Figures and Figure Matrix": {
+      "figure": "always",
+      "figure_styles": [
+        "Numbered figures: choose the correct grouping by shape, number of sides or shading",
+        "Figure matrix: 3x3 grid of figures with one cell '?'; pick the figure that completes it"
+      ],
+      "text_styles": []
+    },
     "Hardware and Software": {
       "figure": "never",
       "figure_styles": [],
@@ -411,7 +654,25 @@
         "Pick the pair of words that sound the same but have different meanings"
       ]
     },
+    "Homophones": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Fill in the correct homophone (there / their, see / sea, son / sun)",
+        "Pick the pair of words that sound the same",
+        "Which sentence uses the word correctly"
+      ]
+    },
     "IT Gadgets and Devices": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Identify a gadget from its description (smartphone, tablet, smartwatch, smart speaker, digital camera, e-reader)",
+            "Which gadget is used for a task (calling, taking photos, listening to music, telling time)",
+            "Odd one out among gadgets"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -441,6 +702,16 @@
       ]
     },
     "Internet": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "What the Internet is and what we can do on it (learn, video call, send email, shop)",
+            "Web browser vs search engine with examples (Chrome, Edge; Google, Bing)",
+            "Email basics: the @ symbol, sending a message, the Inbox",
+            "Internet safety: never share passwords or personal details; tell an adult"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -491,7 +762,28 @@
         "Rearrange the jumbled letters to form a word that fits the clue"
       ]
     },
+    "Keyboard and Mouse": {
+      "figure": "often",
+      "figure_styles": [
+        "Keyboard picture with a key highlighted: name the key or its use",
+        "Mouse picture with a button highlighted: name the button or the action"
+      ],
+      "text_styles": [
+        "Which key gives a space, erases, starts a new line or types capital letters",
+        "Mouse actions: click, double-click, right-click, drag and drop"
+      ]
+    },
     "Length, Weight and Capacity": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Convert m to cm, kg to g and L to mL (whole numbers only)",
+            "Add or subtract lengths, weights or capacities in the same unit; word problems",
+            "Compare measurements: which is longer, heavier or holds more",
+            "Which unit is most suitable to measure a given object"
+          ]
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Ruler, weighing balance or measuring jug drawn with readings"
@@ -515,6 +807,16 @@
       ],
       "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
     },
+    "Lines, Shapes and Solids": {
+      "figure": "always",
+      "figure_styles": [
+        "Straight and curved lines in a figure",
+        "Sides and corners of 2-D shapes",
+        "Name the solid from a picture",
+        "Count the shapes in a picture"
+      ],
+      "text_styles": []
+    },
     "Logical Sequence of Words": {
       "figure": "never",
       "figure_styles": [],
@@ -526,6 +828,15 @@
       ]
     },
     "MS-Paint": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Which tool does a job (Pencil, Brushes, Fill with colour, Eraser, Text, Shapes, Magnifier, Color picker)",
+            "Drawing shapes and choosing colours (Color 1 and Color 2)",
+            "Opening, saving and closing a drawing; Undo"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -548,6 +859,17 @@
       "tips": "Only MS-PowerPoint 2016 facts."
     },
     "MS-Word": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Opening, closing, saving and printing a Word document (Ctrl+O, Ctrl+S, Ctrl+P)",
+            "Components of the MS-Word window (Title bar, Ribbon, Quick Access Toolbar, Status bar, cursor, text area)",
+            "Editing commands: Cut, Copy, Paste, Undo, Redo and their shortcuts (Ctrl+X, Ctrl+C, Ctrl+V, Ctrl+Z, Ctrl+Y)",
+            "Moving in a document with Home and End keys"
+          ],
+          "tips": "Only MS-Word 2016 facts. Class 3 level: only the syllabus items (open, close, save, print, window parts, cut/copy/paste, undo/redo, Home and End)."
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -571,6 +893,17 @@
       ],
       "tips": "Only MS-Word 2016 facts."
     },
+    "Measuring Units": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Ruler, weighing balance or measuring jug picture: read the measure"
+      ],
+      "text_styles": [
+        "Which unit is used to measure a given thing (cm, m, g, kg, mL, L)",
+        "Odd unit out",
+        "A sensible measurement for an object (a pencil is about 15 cm)"
+      ]
+    },
     "Memory": {
       "figure": "never",
       "figure_styles": [],
@@ -582,6 +915,16 @@
       ]
     },
     "Memory and Storage": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Memory stores data and instructions; RAM and ROM in simple words (RAM is temporary)",
+            "Identify storage devices: hard disk, pen drive, CD, DVD, memory card",
+            "Which storage device is inside the computer and which can be carried",
+            "Units of memory: bit, byte, kilobyte - which is the smallest"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -616,6 +959,16 @@
       "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
     },
     "Mirror Images": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Mirror image of a simple figure or picture (mirror placed on the right)",
+            "Mirror image of a capital letter, a short word or a 2- or 3-digit number",
+            "Mirror image of a clock showing an o'clock or half-past time"
+          ],
+          "tips": "Class 3 level: simple figures with 2 or 3 elements; the mirror is always on the right."
+        }
+      },
       "figure": "always",
       "figure_styles": [
         "Mirror image of a figure with the mirror placed on the right (vertical line MN)",
@@ -637,6 +990,17 @@
       "tips": "Options should include the correct image, the water image instead of the mirror image, a 180-degree rotation and the original or another near miss."
     },
     "Money": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Bill with 2 to 4 items and prices (a small table); find the total or the change returned",
+            "Convert rupees and paise (1 rupee = 100 paise) without decimals",
+            "Make an amount with the fewest coins and notes",
+            "Cost of many items from the cost of one (simple multiplication)",
+            "Compare amounts and find who has more money"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -670,6 +1034,16 @@
       "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
     },
     "Nouns": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Identify the naming word (noun) in a sentence",
+            "Common and proper nouns (proper nouns begin with a capital letter)",
+            "Collective nouns (a flock of birds, a bunch of grapes)",
+            "Possessive nouns (Riya's bag, the cat's tail)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -678,6 +1052,35 @@
         "Abstract noun formed from an adjective or verb (brave -> bravery)",
         "Countable and uncountable nouns (much / many, a few / a little)",
         "Possessive nouns (children's, girls')"
+      ]
+    },
+    "Number Sense (3-digit numbers)": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Abacus or place-value chart showing a 3-digit number"
+      ],
+      "text_styles": [
+        "Place value and face value of a digit",
+        "Greatest or smallest number from given digits",
+        "Compare and order numbers",
+        "Number just before, just after or between",
+        "Expanded form",
+        "Skip counting; even and odd numbers"
+      ]
+    },
+    "Number Sense (4-digit numbers)": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Abacus or place-value chart showing a 4-digit number"
+      ],
+      "text_styles": [
+        "Place value and face value of a digit",
+        "Greatest or smallest number from given digits",
+        "Compare and order numbers",
+        "Number just before, just after or between",
+        "Expanded form",
+        "Skip counting; even and odd numbers",
+        "Round off to the nearest 10 or 100"
       ]
     },
     "Number Sense (7 and 8 digit numbers)": {
@@ -707,6 +1110,20 @@
       ]
     },
     "Numerals and Number Names": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Abacus or place-value chart showing a 4-digit number; read the number or its number name"
+          ],
+          "text_styles": [
+            "Number name of a 4-digit number (e.g. 3045 = three thousand forty-five)",
+            "Numeral for a number name with zeros in tricky places (e.g. six thousand eight)",
+            "Place value and face value of a digit in a 4-digit number",
+            "Expanded form and short form (5000 + 300 + 7 = 5307)"
+          ],
+          "tips": "Class 3 level: numbers up to 9999; no lakh, crore or million; no Roman numerals."
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Abacus or place-value chart showing a number; read the number or its number name"
@@ -719,7 +1136,25 @@
         "Expanded form and short form"
       ]
     },
+    "Odd One Out": {
+      "figure": "often",
+      "figure_styles": [
+        "Four figures or pictures: pick the one that is different"
+      ],
+      "text_styles": [
+        "Four words or numbers: pick the odd one"
+      ]
+    },
     "One-word Substitution": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "One word for a group of words (a person who teaches = teacher; a place where books are kept = library)",
+            "Which phrase matches the given word",
+            "Places: one word (a place where we see many animals = zoo)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -739,6 +1174,22 @@
       ]
     },
     "Patterns": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Figure series: 3 or 4 problem figures that change by one simple rule (adding one element, a dot moving round the corners, a quarter turn); pick the next figure",
+            "Missing number in a figure: numbers in circles or a 3x3 grid follow one simple rule (row sums or adding the same number)",
+            "Dot or matchstick pattern: figures 1, 2, 3 are drawn; find how many dots or sticks are in figure 4 or 5"
+          ],
+          "text_styles": [
+            "Number series with one missing term ('?') using +, - or x2 (no squares)",
+            "Letter series (A, C, E, ?) or repeating patterns of letters and numbers",
+            "Repeating pattern of shapes or letters: what comes at a given position",
+            "Wrong term in a simple number series"
+          ],
+          "tips": "Class 3 level: one simple rule per question; numbers up to 1000; no 45-degree turns."
+        }
+      },
       "figure": "often",
       "figure_styles": [
         "Figure series: four or five problem figures that change by a fixed rule (rotation by 45 or 90 degrees, adding one element, moving a dot clockwise); options are four answer figures",
@@ -780,7 +1231,57 @@
         "Wire bent from one shape into another (same perimeter)"
       ]
     },
+    "Phrases": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Complete the phrase (a bunch of flowers, a pair of shoes, a glass of water)",
+        "Which phrase is correct",
+        "Meaning of a simple phrase"
+      ]
+    },
+    "Pictographs": {
+      "figure": "always",
+      "figure_styles": [
+        "Pictograph with a key (1 picture = 1, 2, 5 or 10): totals, differences, most and least"
+      ],
+      "text_styles": [],
+      "tips": "Keep the key simple and the totals small."
+    },
+    "Picture Reading": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Passage question (main idea or best title) based on a picture with a few lines of text",
+        "Passage question (specific detail) based on a picture with a few lines of text",
+        "Passage question (meaning of a word as used in the text)",
+        "Passage question (inference: what can we say is true)",
+        "Passage question (what is happening in the picture)"
+      ],
+      "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'. Picture Reading passages have allow_figure true: draw a simple picture as the passage 'figure' (SVG, at most 520px wide) and keep the text a short caption of 15-60 words."
+    },
+    "Picture Words": {
+      "figure": "always",
+      "figure_styles": [
+        "Picture of an object, animal or action: choose the word",
+        "Picture with a word that has a missing letter: choose the correct spelling"
+      ],
+      "text_styles": []
+    },
     "Possible Combinations": {
+      "class_overrides": {
+        "3": {
+          "figure_styles": [
+            "Simple road map: ways from A to B through one middle town; count the routes"
+          ],
+          "text_styles": [
+            "Outfits from shirts and trousers (up to 4 x 3)",
+            "2-digit numbers formed from given digits without repeating a digit",
+            "Ways to choose one fruit and one drink from a small menu",
+            "Ways to arrange 3 friends in a row (list them)"
+          ]
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Paths along a grid or road map from A to B; count the different routes"
@@ -794,6 +1295,15 @@
       ]
     },
     "Prepositions": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Fill in the correct preposition of place (in, on, under, behind, between, near)",
+            "Prepositions of time (at 5 o'clock, on Monday, in May)",
+            "Pairs of blanks with prepositions (table options)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -804,6 +1314,16 @@
       ]
     },
     "Pronouns": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Choose the correct pronoun to replace the noun (he, she, it, we, they)",
+            "Possessive words (my, mine, your, his, her, our, their)",
+            "this / that / these / those",
+            "I or me; he or him; they or them"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -823,6 +1343,16 @@
       ]
     },
     "Punctuation": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Select the correctly punctuated sentence",
+            "Use of capital letters, full stops, question marks and commas",
+            "Which sentence needs a question mark or an exclamation mark",
+            "Apostrophe in short forms (don't, it's)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -848,6 +1378,16 @@
       "tips": "Make sure the clues give exactly one arrangement. Write the final arrangement in the explanation."
     },
     "Question Tags": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Choose the correct question tag for a simple sentence with is, are, was, can or do (She is ready, isn't she?)",
+            "Choose the correct question word (who, what, where, when, why, how) for the answer given",
+            "Which question tag is wrong"
+          ],
+          "tips": "Class 3 level: this topic also covers the syllabus item 'Basic Questions' (Wh-question words)."
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -857,6 +1397,16 @@
       ]
     },
     "Ranking Test": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Position from the left or right in a row of up to 20 children",
+            "Total in a row from positions from both ends (total = left + right - 1)",
+            "How many children are between two children in a row",
+            "Ordering 4 or 5 children by height or marks from simple comparisons (who is the tallest)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -869,6 +1419,16 @@
       ]
     },
     "Reading Comprehension": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Achievers-level reading: a short paragraph (40 to 70 words) printed in the stem; ask for the best title",
+            "Achievers-level reading: short paragraph; which statement is NOT true according to it",
+            "Achievers-level reading: short paragraph; how a character feels or why"
+          ],
+          "tips": "Achievers reading questions are self-contained: put the paragraph in the question text, not in 'passages'."
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -920,6 +1480,16 @@
       ]
     },
     "Robotics": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "What is a robot; which of these is a robot (robot vacuum cleaner, robotic arm, toy robot)",
+            "Uses of robots: factories, homes, hospitals, space (Mars rover)",
+            "What robots can do (lift heavy things, work without rest) and cannot do (feel)",
+            "Parts of a robot in simple words: sensors (to sense), motors (to move), controller (the brain)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -991,6 +1561,17 @@
       ]
     },
     "Tenses": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Fill in the correct form of the verb (simple present, simple past or simple future)",
+            "Identify the tense of a sentence: present, past or future",
+            "Past form of the verb in a sentence (play -> played, go -> went)",
+            "Find the error in tense usage"
+          ],
+          "tips": "Do not use stative verbs (know, like, have meaning possess, want, belong) in continuous forms. Class 3 level: simple tenses only."
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -1001,6 +1582,16 @@
         "Choose the sentence in the past perfect or present perfect tense"
       ],
       "tips": "Do not use stative verbs (know, like, have meaning possess, want, belong) in continuous forms."
+    },
+    "Thanking": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "What would you say to thank someone in a given situation (choose the most suitable sentence)",
+        "Complete the dialogue: choose the best line for the blank",
+        "Which is the most polite way to thank someone",
+        "Choose the best response to the speaker's sentence"
+      ]
     },
     "Time": {
       "figure": "sometimes",
@@ -1015,6 +1606,18 @@
       ]
     },
     "Time and Temperature": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Read the time to 5 minutes; a.m. and p.m.",
+            "Elapsed time in hours and minutes on the same day",
+            "Convert hours to minutes, weeks to days and years to months",
+            "Hotter or colder: compare temperatures; rise or fall of temperature",
+            "Calendar: days in a month; the day after N days"
+          ],
+          "tips": "Class 3 level: no 24-hour clock."
+        }
+      },
       "figure": "sometimes",
       "figure_styles": [
         "Thermometer reading in degree Celsius drawn as a figure",
@@ -1040,7 +1643,28 @@
       ],
       "tips": "Reading questions always use a passage. The passage is written in the 'passages' list and each question has 'passage_id'."
     },
+    "Uses of Computer": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Picture of a place (bank, hospital, school, railway station, home): how a computer helps there"
+      ],
+      "text_styles": [
+        "Which task a computer can do",
+        "Match the place to the use of a computer",
+        "Which is NOT a use of a computer"
+      ]
+    },
     "Verbs": {
+      "class_overrides": {
+        "3": {
+          "text_styles": [
+            "Identify the action word (verb) in a sentence",
+            "Helping verbs (is, am, are, was, were, has, have)",
+            "Subject-verb agreement (He plays / They play)",
+            "Past form of a verb (go - went, eat - ate)"
+          ]
+        }
+      },
       "figure": "never",
       "figure_styles": [],
       "text_styles": [
@@ -1061,6 +1685,17 @@
         "Transitive and intransitive verbs, helping verbs and modals (can, could, may, must, should)"
       ]
     },
+    "Vocabulary": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Picture of a household thing, piece of clothing, food item, pet or a face showing an emotion: choose the word"
+      ],
+      "text_styles": [
+        "The word that belongs to a group",
+        "The odd word out",
+        "The word that names the feeling in a situation"
+      ]
+    },
     "Windows 11": {
       "figure": "never",
       "figure_styles": [],
@@ -1072,6 +1707,27 @@
         "Settings app and Quick Settings (Win+A); Task Manager (Ctrl+Shift+Esc)"
       ],
       "tips": "Only Windows 11 facts. Never mention older Windows versions."
+    },
+    "Word Order": {
+      "figure": "never",
+      "figure_styles": [],
+      "text_styles": [
+        "Arrange the words to make a sentence",
+        "Which sentence has the words in the correct order",
+        "Which word comes first or last in the sentence"
+      ]
+    },
+    "Words Related to Animals": {
+      "figure": "sometimes",
+      "figure_styles": [
+        "Animal picture: choose its young one, home or sound"
+      ],
+      "text_styles": [
+        "Young ones of animals",
+        "Homes of animals",
+        "Sounds of animals",
+        "Groups of animals (herd, flock)"
+      ]
     }
   }
 }

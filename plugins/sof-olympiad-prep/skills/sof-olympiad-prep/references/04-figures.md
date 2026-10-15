@@ -332,6 +332,9 @@ q["options"] = {L: {"svg": svg(120, 120, b)} for L, b in zip(letters, bodies)}
 ```
 
 - Use the same box (at most 140 x 140 px) and the same scale for all four options.
+- Odd-one-out options: only the intended rule may single out the answer. Draw the shapes at a
+  similar size, and do not let one option be the only small, rotated or flat-topped one. Keep
+  dots and marks at least 10 px inside every edge and at least 18 px apart (centre to centre).
 - Do not set `option_layout`; `auto` puts figure options in one row.
 - Each wrong option differs from the right one in one small way: flipped, turned, one line
   missing or extra, or a different count. Never make a wrong option that is also correct.

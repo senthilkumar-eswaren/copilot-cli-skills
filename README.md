@@ -49,7 +49,7 @@ copilot-cli-skills/
         └── skills/
             └── sof-olympiad-prep/
                 ├── SKILL.md
-                ├── data/             # exam patterns, syllabi, question styles (JSON)
+                ├── data/             # class3.json, class5.json (exam patterns, syllabi), question styles
                 ├── references/
                 └── scripts/          # Python helpers (blueprint, validate, render PDFs, score)
 ```
@@ -63,7 +63,7 @@ but every plugin in this repo currently contains just one skill.
 | Plugin | Description |
 |---|---|
 | [`cbse-unit-test-prep`](./plugins/cbse-unit-test-prep) | Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX + PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream. Requires `pandoc`, Python (`python-docx`, `pypdf`), and a Chromium-based browser on the machine running it — see the plugin's `references/03-assembly-and-conversion-pipeline.md` for an install matrix and graceful-fallback behavior when a tool is missing. |
-| [`sof-olympiad-prep`](./plugins/sof-olympiad-prep) | Generates original SOF-style practice papers for Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a score log and weak-topic reports. Papers are written fresh from the published exam pattern and syllabus — no SOF papers are copied or bundled; not affiliated with SOF. Requires Python 3.9+ (standard library only) and Google Chrome, Microsoft Edge or Chromium for PDFs (or set `OLYMPIAD_BROWSER` to the browser binary; without a browser it writes HTML only); PyMuPDF is optional (page footers, previews). Data is kept in `~/olympiad-prep` (override with `OLYMPIAD_PREP_HOME`); PDFs are saved to `~/Downloads` when it exists (override with `OLYMPIAD_OUT_DIR`). |
+| [`sof-olympiad-prep`](./plugins/sof-olympiad-prep) | Generates original SOF-style practice papers for Class 3 and Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a separate score log for each child and weak-topic reports. Several children can share one setup: register each with its class (`sof_common.py students add <label> --class 3`) and pass `--student <label>`. Papers are written fresh from the published exam pattern and syllabus — no SOF papers are copied or bundled; not affiliated with SOF. Requires Python 3.9+ (standard library only) and Google Chrome, Microsoft Edge or Chromium for PDFs (or set `OLYMPIAD_BROWSER` to the browser binary; without a browser it writes HTML only); PyMuPDF is optional (page footers, previews). Data is kept in `~/olympiad-prep` (override with `OLYMPIAD_PREP_HOME`); PDFs are saved to `~/Downloads` when it exists (override with `OLYMPIAD_OUT_DIR`). |
 
 ## Adding a new plugin to this repo
 

@@ -8,7 +8,10 @@ Outputs (in --out-dir, default: $OLYMPIAD_OUT_DIR, else ~/Downloads):
 
 Usage:
   render_paper.py PAPER_JSON_OR_SLUG [--out-dir DIR] [--no-omr] [--no-record]
-                  [--html-only] [--force] [--preview]
+                  [--html-only] [--force] [--preview] [--student LABEL]
+
+--student picks the child whose papers/history are used (default: the child the
+paper was made for).
 
 HTML sources are kept in the paper's work folder. PDFs are printed with headless
 Chrome/Edge/Chromium; page footers are stamped with PyMuPDF when it is installed.
@@ -22,7 +25,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 from sof_common import (LETTERS, default_out_dir, die, find_browser, get_exam,  # noqa: E402
     get_level, html_to_pdf, load_paper, marks_for, max_marks, paper_footer_label,
-    paper_title, question_figures, record_paper, render_markup, strip_markup,
+    paper_title, question_figures, record_paper, render_markup, set_student, strip_markup,
     student_view, svg_check, svg_for_html, work_dir)
 
 try:
@@ -74,6 +77,8 @@ body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1
 .passage { border: 1px solid #c9cfdc; background: #f6f8fc; border-radius: 6px; padding: 6px 10px;
   margin: 2px 0 8px; text-align: justify; break-after: avoid; }
 .passage .pt { text-align: center; font-weight: 700; margin-bottom: 3px; }
+.passage .pfig { text-align: center; }
+.passage .tbl { margin: 4px auto 2px; }
 .dfig { break-after: avoid; }
 .q { display: flex; gap: 6px; margin: 0 0 9px; break-inside: avoid; }
 .qn { min-width: 26px; font-weight: 800; color: #c0392b; flex: none; }
@@ -205,6 +210,8 @@ def items_html(q):
     for i, x in enumerate(items):
         if style == "statement":
             lab = "<b>Statement-%s:</b> " % (ROMAN_UP[i] if i < len(ROMAN_UP) else i + 1)
+        elif style == "statement_num":
+            lab = "<b>Statement %d :</b> " % (i + 1)
         elif style == "roman":
             lab = "(%s) " % (ROMAN[i] if i < len(ROMAN) else i + 1)
         elif style == "letter":
@@ -278,8 +285,9 @@ def direction_html(d):
 def passage_html(p):
     paras = [x.strip() for x in re.split(r"\n\s*\n", str(p.get("text") or "")) if x.strip()]
     title = ("<div class='pt'>%s</div>" % rm(p["title"])) if p.get("title") else ""
-    return "<div class='passage'>%s%s</div>" % (
-        title, "".join("<p style='margin:0 0 4px'>%s</p>" % rm(x) for x in paras))
+    return "<div class='passage'>%s%s%s%s</div>" % (
+        title, fig_html(p.get("figure"), "pfig qfig"),
+        "".join("<p style='margin:0 0 4px'>%s</p>" % rm(x) for x in paras), table_html(p.get("table")))
 
 
 def banner_html(sec):
@@ -351,7 +359,8 @@ def info_box_html(paper):
     rows.append("<tr><th class='l'>Total</th><th></th><th>%d</th><th></th><th>%d</th></tr>" % (nq, int(total)))
     table = ("<table><tr><th class='l'>Section</th><th>Q. Nos.</th><th>Questions</th><th>Marks each</th>"
              "<th>Marks</th></tr>%s</table>") % "".join(rows)
-    rules = [str(r) for r in (paper.get("exam_rules") or [])] or GENERAL_RULES
+    # paper["exam_rules"] (in older papers) holds writer-only notes, never student instructions.
+    rules = GENERAL_RULES
     topics = ""
     if paper.get("mode") == "practice" and paper.get("topics"):
         names = [topic_label(t.get("name") or t.get("id")) if isinstance(t, dict) else topic_label(t)
@@ -571,10 +580,12 @@ def main(argv=None):
     ap.add_argument("--html-only", action="store_true", help="write HTML files instead of PDFs")
     ap.add_argument("--force", action="store_true", help="overwrite existing files; ignore figure problems")
     ap.add_argument("--preview", action="store_true", help="also save PNG previews of the first pages")
+    ap.add_argument("--student", help="child's label (default: the paper's student)")
     a = ap.parse_args(argv)
 
+    set_student(a.student)
     try:
-        paper, ppath = load_paper(a.paper)
+        paper, ppath = load_paper(a.paper, auto_student=(a.student is None))
     except ValueError as e:
         die(str(e))
     probs = check_svgs(paper)

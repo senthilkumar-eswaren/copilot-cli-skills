@@ -17,7 +17,8 @@ def parse_args():
     ap.add_argument("--exam", type=str.upper, choices=EXAMS, required=True)
     ap.add_argument("--mode", choices=("mock", "practice"), default="mock")
     ap.add_argument("--level", type=int, choices=(1, 2), default=1)
-    ap.add_argument("--class", dest="cls", type=int, default=5)
+    ap.add_argument("--class", dest="cls", type=int, default=None)
+    ap.add_argument("--student")
     ap.add_argument("--paper-no", type=int)
     ap.add_argument("--seed")
     ap.add_argument("--topics", action="append", default=[])
@@ -36,39 +37,23 @@ def parse_args():
 
 
 def resolve_topics(vals, exam, cls):
-    names = []
-    for v in vals:
-        v = (v or "").strip()
-        if not v:
-            continue
-        if ";" in v or "|" in v:
-            pieces = [p for p in re.split(r"[;|]", v)]
-        else:
-            try:
-                topic_lookup(v, exam, cls)
-                pieces = [v]
-            except ValueError:
-                pieces = v.split(",")
-        for p in pieces:
-            p = p.strip()
-            if not p:
-                continue
-            try:
-                names.append(topic_lookup(p, exam, cls))
-            except ValueError as e:
-                die(str(e))
-    return uniq(names)
+    if isinstance(vals, str):
+        vals = [vals]
+    try:
+        return parse_topic_list([v for v in (vals or []) if v and str(v).strip()], exam, cls)
+    except ValueError as e:
+        die(str(e))
 
 
 _STYLES = None
 
 
-def style_of(t):
+def style_of(t, cls=None):
     global _STYLES
     if _STYLES is None:
         s = load_styles()
         _STYLES = s.get("topics", s) if isinstance(s, dict) else {}
-    e = _STYLES.get(t) or {}
+    e = merged_style(_STYLES.get(t), cls) or {}
     tips = e.get("tips", "")
     if isinstance(tips, list):
         tips = " ".join(str(x) for x in tips)
@@ -143,11 +128,11 @@ def difficulty_list(rng, n, ach):
     return out[:n]
 
 
-def assign_fig_style(rows, seed):
+def assign_fig_style(rows, seed, cls=None):
     cnt, cyc = {}, {}
     for r in rows:
         t = r["topic"]
-        st = style_of(t)
+        st = style_of(t, cls)
         r["tips"] = st.get("tips", "")
         if r.get("passage_id"):
             r["figure"] = False
@@ -224,6 +209,11 @@ FORMAT_INSTR = {
     "match": ("Match-the-columns question. Fill 'match' with left_title \"Column I\", right_title \"Column II\", "
               "left = 4 items (P, Q, R, S) and right = 4 items (1, 2, 3, 4). Options are mappings like "
               "\"P → 2, Q → 4, R → 1, S → 3\"; exactly one mapping is fully correct."),
+    "statements_c3": ("Statement 1/2 question (Class 3 style). Put the two statements in 'items' (item_style \"statement_num\"; "
+                      "labels Statement 1 : and Statement 2 :) and set question_after to \"Which of the given statements hold(s) true?\" "
+                      "(you may add the topic, e.g. \"... hold(s) true about MS-Word?\"). Use exactly these options: "
+                      "A \"Only Statement 1\", B \"Only Statement 2\", C \"Both Statement 1 and Statement 2\", "
+                      "D \"Neither Statement 1 nor Statement 2\". Write the statements so the assigned answer letter is correct."),
 }
 
 
@@ -234,6 +224,8 @@ def eligible(r, fmt, exam):
         return fmt == "not"
     if "Logical Reasoning" in r.get("section_name", "") or is_lr_like(r["topic"]):
         return fmt in ("not", "table_i_ii")
+    if fmt == "statements_c3":
+        return exam == "ICSO"
     if exam == "IMO":
         return fmt in ("statements", "table_i_ii", "not", "roman_combo")
     return True
@@ -244,10 +236,15 @@ def _set_fmt(r, f):
     r["format_instructions"] = FORMAT_INSTR[f]
 
 
-def mock_formats(rows, exam, seed):
-    toks = ["statements"] * 2 + ["table_i_ii"] * 2 + ["not"] * 3 + ["roman_combo"]
-    if exam in ("IEO", "ICSO"):
-        toks.append("match")
+def mock_formats(rows, exam, seed, cls=5):
+    if int(cls) <= 3:
+        # Official Class 3 samples use very few special formats.
+        toks = {"ICSO": ["statements_c3", "not"], "IMO": ["not", "table_i_ii"]}.get(exam, ["not"])
+    else:
+        small = len(rows) < 50
+        toks = ["statements"] * (1 if small else 2) + ["table_i_ii"] * 2 + ["not"] * (2 if small else 3) + ["roman_combo"]
+        if exam in ("IEO", "ICSO"):
+            toks.append("match")
     rng = random.Random(seed + "|fmt")
     rng.shuffle(toks)
     secs = uniq([r["section"] for r in rows])
@@ -274,17 +271,23 @@ def mock_formats(rows, exam, seed):
             warn("no eligible question for format '%s'; skipped" % f)
 
 
-def practice_formats(rows, exam, seed):
+def practice_formats(rows, exam, seed, cls=5):
     n = len(rows)
     toks = []
-    if n >= 10:
-        toks += ["not", "table_i_ii"]
-    if n >= 15:
-        toks.append("statements")
-    if n >= 20:
-        toks.append("roman_combo")
-        if exam in ("IEO", "ICSO"):
-            toks.append("match")
+    if int(cls) <= 3:
+        if n >= 10:
+            toks.append("not")
+        if n >= 15:
+            toks += {"ICSO": ["statements_c3"], "IMO": ["table_i_ii"]}.get(exam, [])
+    else:
+        if n >= 10:
+            toks += ["not", "table_i_ii"]
+        if n >= 15:
+            toks.append("statements")
+        if n >= 20:
+            toks.append("roman_combo")
+            if exam in ("IEO", "ICSO"):
+                toks.append("match")
     rng = random.Random(seed + "|fmt")
     for f in toks:
         c = [r for r in rows if r["format"] == "standard" and eligible(r, f, exam)]
@@ -307,10 +310,22 @@ def _is_reading(sec):
 
 def _passage(pid, ttype, scls, cls, ids, styles):
     low = ttype.lower()
+    pic = "picture" in low
+    try:
+        pw = load_class(cls).get("passage_words") or {}
+    except ValueError:
+        pw = {}
+    if pic:
+        words = "15-60"
+    elif int(scls) == int(cls):
+        words = pw.get("current") or "150-220"
+    else:
+        words = pw.get("previous") or "120-180"
     return {"id": pid, "text_type": ttype, "syllabus_class": int(scls),
-            "words": "150-220" if int(scls) == int(cls) else "120-180",
+            "words": words,
             "question_ids": list(ids), "skills": uniq(styles),
-            "allow_table": any(k in low for k in ("time-table", "timetable", "menu"))}
+            "allow_table": any(k in low for k in ("time-table", "timetable", "menu")),
+            "allow_figure": pic}
 
 
 def reading_rows(sec, start, level, cls, rng):
@@ -329,7 +344,7 @@ def reading_rows(sec, start, level, cls, rng):
     rows, passages, i = [], [], start
     for k, (tt, scls) in enumerate(types):
         pid = "P%d" % (k + 1)
-        ts = style_of(tt)["text_styles"]
+        ts = style_of(tt, cls)["text_styles"]
         ids, sty = [], []
         for j in range(sizes[k]):
             r = make_row(i, sec, tt, scls)
@@ -445,12 +460,12 @@ def build_practice(exam, cls, topics, n, ach_arg, seed):
     if A:
         lv1 = get_level(exam, 1, cls)
         asec = next((sc for _a, _b, sc in section_ranges(lv1) if sc.get("achievers")), None)
-        asec = asec or {"no": 0, "name": "Achievers Section", "marks_each": 3, "achievers": True}
+        asec = asec or {"no": 0, "name": "Achievers Section", "marks_each": achievers_marks(exam, cls), "achievers": True}
         ano = len(secmap) + 1
         for j in range(A):
             _hl, _hs, t, _sec, scls = elig[j % len(elig)]
             r = make_row(0, asec, t, scls)
-            r.update({"achievers": True, "marks": asec.get("marks_each", 3), "difficulty": "hard", "section": ano})
+            r.update({"achievers": True, "marks": asec.get("marks_each", achievers_marks(exam, cls)), "difficulty": "hard", "section": ano})
             rows.append(r)
     for i, r in enumerate(rows):
         r["id"] = i + 1
@@ -461,7 +476,7 @@ def build_practice(exam, cls, topics, n, ach_arg, seed):
         chunks = [grp[i:i + 5] for i in range(0, len(grp), 5)]
         if len(chunks) > 1 and len(chunks[-1]) < 3:
             chunks[-2] += chunks.pop()
-        ts = style_of(t)["text_styles"]
+        ts = style_of(t, cls)["text_styles"]
         for ch in chunks:
             pn += 1
             pid = "P%d" % pn
@@ -529,25 +544,38 @@ def ref_path(prefix):
     return os.path.join(str(REFERENCES_DIR), prefix + "*")
 
 
-RULES = [
-    "Write ORIGINAL questions only. Never copy or closely paraphrase SOF, MTG or any published question.",
-    "Exactly one option is correct; the other three are plausible distractors built from common Class 5 mistakes.",
-    "Check every calculation with python3 before writing it; the explanation must show the working.",
-    "Use Indian context (Rs symbol, lakh/crore, Indian names, places, festivals) and Class 5 vocabulary.",
-    "Follow each row exactly: topic, syllabus_class, difficulty, format, format_instructions, style, prefix and tips.",
-    "If figure is true, include an SVG figure (see reference 04) that the question genuinely needs.",
-    "Write NOT as <b>NOT</b>.",
-    "Put the correct answer at the row's assigned letter (answer).",
-    "Allowed tags only: b, i, u, sup, sub, br.",
-    "Tokens: [[frac:3/4]], [[frac:2 3/4]], [[blank]], [[blank:(i)]]. Put spaces around < and > used in text.",
-    "Output JSON only, as described in reference 03, saved to the spec's output path; then run validate_cmd and fix every error.",
-]
+def rules_for(cls=5):
+    cls = int(cls)
+    ctx = "Rs symbol, lakh/crore" if cls >= 5 else "Rs symbol"
+    rules = [
+        "Write ORIGINAL questions only. Never copy or closely paraphrase SOF, MTG or any published question.",
+        "Exactly one option is correct; the other three are plausible distractors built from common Class %d mistakes." % cls,
+        "Check every calculation with python3 before writing it; the explanation must show the working.",
+        "Use Indian context (%s, Indian names, places, festivals) and Class %d vocabulary." % (ctx, cls),
+        "Follow each row exactly: topic, syllabus_class, difficulty, format, format_instructions, style, prefix and tips.",
+        "If figure is true, include an SVG figure (see reference 04) that the question genuinely needs.",
+        "Write NOT as <b>NOT</b>.",
+        "Put the correct answer at the row's assigned letter (answer).",
+        "Allowed tags only: b, i, u, sup, sub, br.",
+        "Tokens: [[frac:3/4]], [[frac:2 3/4]], [[blank]], [[blank:(i)]]. Put spaces around < and > used in text.",
+        "Output JSON only, as described in reference 03, saved to the spec's output path; then run validate_cmd and fix every error.",
+    ]
+    try:
+        rules += [str(g) for g in (load_class(cls).get("writing_guidance") or [])]
+    except Exception:
+        pass
+    return rules
+
+
+RULES = rules_for(5)
 EXAM_RULES = {
     "IMO": [],
     "IEO": ["Use modern standard English usage.",
             "Never use continuous forms of stative verbs (know, like, want, believe, own, ...).",
             "Choose will/can/would strictly by context so that only one option fits.",
-            "Reading passages must be original."],
+            "Reading passages must be original.",
+            "'Have' meaning possess or be ill is never continuous; 'having lunch/fun' is fine, but 'taking my lunch' is not idiomatic.",
+            "If a passage has allow_figure true (Picture Reading), draw the picture as the passage 'figure' (SVG, at most 520px wide) and keep the text a short caption."],
     "ICSO": ["Refer only to Windows 11 and MS-Office 2016 (menus, shortcuts, features)."],
 }
 
@@ -608,7 +636,7 @@ def avoid_similar(slug, topics):
 
 
 def write_specs(meta, rows, passages, parts, wd, bp_path):
-    home = prep_home()
+    home = base_home()
     validator = os.path.join(str(SCRIPTS_DIR), "validate_paper.py")
     refs = [ref_path("03"), ref_path("04")]
     avoid = avoid_similar(meta["slug"], set(r["topic"] for r in rows))
@@ -623,10 +651,10 @@ def write_specs(meta, rows, passages, parts, wd, bp_path):
         ptopics = sorted(set(r["topic"] for r in prows))
         spec = dict(meta)
         spec.update({"part": pname, "ids": list(ids), "output": pjson, "references": refs,
-                     "rules": RULES, "exam_rules": EXAM_RULES.get(meta["exam"], []),
+                     "rules": rules_for(meta["class"]), "exam_rules": EXAM_RULES.get(meta["exam"], []),
                      "avoid_similar": dict((t, avoid[t]) for t in ptopics if t in avoid),
-                     "validate_cmd": "OLYMPIAD_PREP_HOME='%s' python3 '%s' '%s' --blueprint '%s' --part %s"
-                                     % (home, validator, pjson, bp_path, pname),
+                     "validate_cmd": "OLYMPIAD_PREP_HOME='%s' OLYMPIAD_STUDENT='%s' python3 '%s' '%s' --blueprint '%s' --part %s"
+                                     % (home, student_label() or "", validator, pjson, bp_path, pname),
                      "passages": ppass, "rows": prows})
         write_json(pspec, spec)
         out.append({"name": pname, "ids": list(ids), "json": pjson, "spec": pspec})
@@ -663,6 +691,8 @@ def print_summary(meta, rows, passages, parts, bp_path):
     prev = sum(1 for r in rows if int(r["syllabus_class"]) == cls - 1)
     print("")
     print("%s  [%s]  seed=%s" % (meta["title"], meta["slug"], meta["seed"]))
+    if meta.get("student"):
+        print("Student: %s" % meta["student"])
     print("Questions: %d   Marks: %s   Time: %s min" % (n, meta["total_marks"], meta["time_minutes"]))
     print("Class %d syllabus: %d (%.0f%%)" % (cls - 1, prev, 100.0 * prev / max(n, 1)))
     print("Difficulty: " + _counts(rows, "difficulty"))
@@ -712,7 +742,8 @@ def _short_names(exam, cls, mode, lv, rows):
 def main():
     a = parse_args()
     exam = norm_exam(a.exam) if getattr(a, "exam", None) else None
-    cls = int(_arg(a, "cls", "class_", "klass", default=5))
+    set_student(getattr(a, "student", None))
+    cls = int(resolve_class(_arg(a, "cls", "class_", "klass")))
     if getattr(a, "list_topics", False):
         list_topics(exam, cls)
         return 0
@@ -732,15 +763,16 @@ def main():
             rows, passages = build_practice(exam, cls, topics, int(_arg(a, "count", default=20)),
                                             _arg(a, "achievers", "ach"), seed)
             name = practice_name(topics, _arg(a, "set_name", "name"))
-            time_minutes = rhalf(1.2 * len(rows))
+            lv1 = get_level(exam, 1, cls)
+            time_minutes = rhalf(len(rows) * float(lv1.get("time_minutes") or 60) / float(lv1.get("total_questions") or 50))
     except (KeyError, ValueError, LookupError) as e:
         die(str(e) if isinstance(e, ValueError) else "%s: %s" % (type(e).__name__, e))
-    assign_fig_style(rows, seed)
+    assign_fig_style(rows, seed, cls)
     assign_prefixes(rows, exam, level)
     if mode == "mock":
-        mock_formats(rows, exam, seed)
+        mock_formats(rows, exam, seed, cls)
     else:
-        practice_formats(rows, exam, seed)
+        practice_formats(rows, exam, seed, cls)
     for r, ans in zip(rows, assign_answers(len(rows), seed)):
         r["answer"] = ans
     for r in rows:
@@ -759,14 +791,15 @@ def main():
     meta = {"slug": slug, "exam": exam, "class": cls, "level": level, "mode": mode,
             "paper_no": paper_no, "set_name": name, "name": name, "topics": topics,
             "created": today(), "seed": seed, "time_minutes": time_minutes,
-            "total_questions": len(rows), "total_marks": sum(int(r.get("marks") or 1) for r in rows)}
+            "total_questions": len(rows), "total_marks": sum(int(r.get("marks") or 1) for r in rows),
+            "student": student_label() or None}
     meta["title"] = paper_title(meta)
     plist = mock_parts(rows) if mode == "mock" else practice_parts(rows)
     parts = write_specs(meta, rows, passages, plist, wd, str(bp))
     bpd = dict(meta)
     bpd.update({"sections": sections_from_rows(rows, _short_names(exam, cls, mode, lv, rows)),
                 "passages": passages, "rows": rows, "parts": parts,
-                "rules": RULES, "exam_rules": EXAM_RULES.get(exam, [])})
+                "rules": rules_for(cls), "exam_rules": EXAM_RULES.get(exam, [])})
     write_json(str(bp), bpd)
     print_table(rows)
     print_summary(meta, rows, passages, parts, str(bp))

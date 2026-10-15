@@ -4,15 +4,19 @@
 Library used by blueprint.py, validate_paper.py, assemble_paper.py,
 render_paper.py and score.py.  Also a small CLI:
 
-  python3 sof_common.py paths
-  python3 sof_common.py next-no --exam IMO --mode mock [--level 1]
-  python3 sof_common.py next-no --exam IEO --mode practice --topics "Tenses"
-  python3 sof_common.py list [--exam IMO]
-  python3 sof_common.py student-view <paper.json | slug> [--out FILE]
+  python3 sof_common.py paths [--student LABEL]
+  python3 sof_common.py next-no --exam IMO --mode mock [--level 1] [--class 3] [--student LABEL]
+  python3 sof_common.py next-no --exam IEO --mode practice --topics "Tenses; Articles"
+  python3 sof_common.py list [--exam IMO] [--student LABEL]
+  python3 sof_common.py student-view <paper.json | slug> [--out FILE] [--student LABEL]
+  python3 sof_common.py students [list | add LABEL --class N]
   python3 sof_common.py selfcheck
 
-Data root: $OLYMPIAD_PREP_HOME (default ~/olympiad-prep) holds papers/,
-work/, history.json, scores.csv and attempts.jsonl.  Printable PDFs go to
+Data root: $OLYMPIAD_PREP_HOME (default ~/olympiad-prep) holds the default
+child's papers/, work/, history.json, scores.csv and attempts.jsonl.  Other
+children (--student LABEL or $OLYMPIAD_STUDENT) get the same layout under
+students/<label>/, and students.json remembers each child's class.
+Supported classes are the data/class*.json files.  Printable PDFs go to
 $OLYMPIAD_OUT_DIR (default ~/Downloads).
 """
 import argparse
@@ -79,11 +83,74 @@ def die(msg: str, code: int = 2):
 
 
 # ------------------------------------------------------------------ paths
-def prep_home() -> Path:
+STUDENT_RE = re.compile(r"^[A-Za-z0-9 _-]{1,40}$")
+
+
+def base_home() -> Path:
+    """Data root for all children (the default child's data lives directly here)."""
     home = Path(os.environ.get("OLYMPIAD_PREP_HOME") or (Path.home() / "olympiad-prep")).expanduser()
+    home.mkdir(parents=True, exist_ok=True)
+    return home
+
+
+def student_label() -> str:
+    return (os.environ.get("OLYMPIAD_STUDENT") or "").strip()
+
+
+def student_slug(label: Optional[str] = None) -> str:
+    lab = student_label() if label is None else label
+    return re.sub(r"[^a-z0-9]+", "-", (lab or "").strip().lower()).strip("-")
+
+
+def set_student(label: Optional[str]) -> None:
+    """Select the child (None = keep current/env; '' = default child)."""
+    if label is None:
+        return
+    lab = label.strip()
+    if lab and (not STUDENT_RE.match(lab) or not student_slug(lab)):
+        die("Invalid --student %r: use letters, digits, spaces, '-' or '_' (max 40 characters)" % label)
+    os.environ["OLYMPIAD_STUDENT"] = lab
+
+
+def prep_home() -> Path:
+    home = base_home()
+    slug = student_slug()
+    if slug:
+        home = home / "students" / slug
     for sub in ("papers", "work"):
         (home / sub).mkdir(parents=True, exist_ok=True)
     return home
+
+
+def students_path() -> Path:
+    return base_home() / "students.json"
+
+
+def load_students() -> Dict[str, dict]:
+    p = students_path()
+    try:
+        d = read_json(p) if p.exists() else {}
+    except Exception:
+        d = {}
+    st = d.get("students") if isinstance(d, dict) else None
+    return st if isinstance(st, dict) else {}
+
+
+def student_class(label: Optional[str] = None) -> Optional[int]:
+    e = load_students().get(student_slug(label))
+    try:
+        return int(e["class"]) if e and e.get("class") else None
+    except (TypeError, ValueError):
+        return None
+
+
+def remember_student(label: str, cls: int) -> None:
+    slug = student_slug(label)
+    if not slug:
+        return
+    st = load_students()
+    st[slug] = {"label": label.strip(), "class": int(cls)}
+    write_json(students_path(), {"students": st})
 
 
 def papers_dir() -> Path:
@@ -133,16 +200,62 @@ def load_class(cls: int = 5) -> dict:
     if key not in _CACHE:
         p = DATA_DIR / ("class%d.json" % int(cls))
         if not p.exists():
-            raise ValueError("No data for class %s (expected %s). This skill currently supports Class 5." % (cls, p))
+            raise ValueError("No data for class %s. Supported classes: %s" % (cls, ", ".join(str(c) for c in supported_classes())))
         _CACHE[key] = read_json(p)
     return _CACHE[key]
 
 
+def supported_classes() -> List[int]:
+    out = []
+    for p in DATA_DIR.glob("class*.json"):
+        m = re.match(r"^class(\d+)\.json$", p.name)
+        if m:
+            out.append(int(m.group(1)))
+    return sorted(out)
+
+
+def resolve_class(cli_cls=None) -> int:
+    """Class to use: explicit --class, else the selected child's saved class, else 5."""
+    if cli_cls is not None and str(cli_cls).strip() != "":
+        try:
+            cls = int(cli_cls)
+        except (TypeError, ValueError):
+            die("Bad --class %r" % (cli_cls,))
+    else:
+        cls = student_class() or 5
+    sup = supported_classes()
+    if cls not in sup:
+        die("Class %s is not supported. Supported classes: %s" % (cls, ", ".join(str(c) for c in sup)))
+    saved = student_class() if student_slug() else None
+    if student_slug() and saved is None:
+        remember_student(student_label(), cls)
+    elif saved is not None and saved != cls:
+        print("NOTE: %s is saved as Class %d; using Class %d for this paper" % (student_label(), saved, cls), file=sys.stderr)
+    return cls
+
+
 def load_styles() -> Dict[str, dict]:
-    """Per-topic question styles: {topic: {figure, figure_styles, text_styles, tips?}}."""
+    """Per-topic question styles: {topic: {figure, figure_styles, text_styles, tips?, class_overrides?}}.
+
+    Use merged_style(entry, cls) to apply a class's overrides; never mutate the cached entries.
+    """
     if "styles" not in _CACHE:
         _CACHE["styles"] = read_json(DATA_DIR / "question_styles.json")["topics"]
     return _CACHE["styles"]
+
+
+STYLE_KEYS = ("figure", "figure_styles", "text_styles", "tips")
+
+
+def merged_style(entry: Optional[dict], cls: Optional[int] = None) -> Optional[dict]:
+    """A copy of a style entry with class_overrides[str(cls)] applied (each key replaces the base)."""
+    if entry is None:
+        return None
+    out = copy.deepcopy({k: v for k, v in entry.items() if k != "class_overrides"})
+    if cls is not None:
+        over = (entry.get("class_overrides") or {}).get(str(int(cls)), {})
+        out.update(copy.deepcopy(over))
+    return out
 
 
 def norm_exam(exam: str) -> str:
@@ -249,6 +362,50 @@ def topic_lookup(name: str, exam: Optional[str] = None, cls: int = 5) -> str:
     sugg = difflib.get_close_matches(name, cands, n=5, cutoff=0.4)
     hint = ("Closest: " + "; ".join(sugg)) if sugg else ("Valid topics: " + "; ".join(cands))
     raise ValueError("Unknown topic %r for %s. %s" % (name, scope, hint))
+
+
+def _exact_topic(name: str, exam: Optional[str], cls: int) -> Optional[str]:
+    n = _norm_topic(name)
+    for t in all_topics(exam, cls):
+        if _norm_topic(t) == n:
+            return t
+    return None
+
+
+def parse_topic_list(s, exam: Optional[str] = None, cls: int = 5) -> List[str]:
+    """Topics from user input: separate with ';' (or '|').  Commas also work unless the
+    comma is part of a topic name such as 'Length, Weight and Capacity'."""
+    if s is None:
+        return []
+    if isinstance(s, (list, tuple)):
+        out: List[str] = []
+        for x in s:
+            out.extend(parse_topic_list(x, exam, cls))
+        return uniq(out)
+    out = []
+    for part in re.split(r"[;|]", str(s)):
+        part = part.strip()
+        if not part:
+            continue
+        t = _exact_topic(part, exam, cls) if "," in part else None
+        if t:
+            out.append(t)
+        elif "," in part:
+            out.extend(topic_lookup(b.strip(), exam, cls) for b in part.split(",") if b.strip())
+        else:
+            out.append(topic_lookup(part, exam, cls))
+    return uniq(out)
+
+
+def achievers_marks(exam: str, cls: int = 5) -> int:
+    """Marks for one Achievers question (2 for Classes 1-4, 3 for Classes 5-10)."""
+    try:
+        for s in get_level(exam, 1, cls)["sections"]:
+            if s.get("achievers"):
+                return int(s["marks_each"])
+    except (ValueError, KeyError):
+        pass
+    return 2 if int(cls) <= 4 else 3
 
 
 def topic_home_section(exam: str, topic: str, cls: int = 5) -> Tuple[int, int]:
@@ -594,23 +751,85 @@ def paper_footer_label(paper: dict) -> str:
 
 
 # ------------------------------------------------------------ paper utils
-def load_paper(arg: str) -> Tuple[dict, Path]:
+def student_desc(label: Optional[str]) -> str:
+    return "'%s'" % label if label else "the default child"
+
+
+def paper_owner(paper: dict, path: Path) -> Optional[str]:
+    """Child a paper belongs to: its label, '' for the default child, None if unknown."""
+    st = paper.get("student")
+    if isinstance(st, str) and st.strip():
+        return st.strip()
+    try:
+        rel = path.resolve().relative_to(base_home().resolve())
+    except ValueError:
+        return None
+    parts = rel.parts
+    if len(parts) == 4 and parts[0] == "students" and parts[2] == "papers":
+        return (load_students().get(parts[1]) or {}).get("label") or parts[1]
+    if len(parts) == 2 and parts[0] == "papers":
+        return ""
+    return None
+
+
+def _paper_elsewhere(name: str) -> List[Tuple[str, Path]]:
+    """Other children's copies of a paper slug as (label, path); '' = the default child."""
+    if "/" in name or os.sep in name:
+        return []
+    fname = name if name.endswith(".json") else name + ".json"
+    root, cur, found = base_home(), student_slug(), []
+    if cur and (root / "papers" / fname).is_file():
+        found.append(("", root / "papers" / fname))
+    sdir = root / "students"
+    if sdir.is_dir():
+        known = load_students()
+        for d in sorted(sdir.iterdir()):
+            if d.is_dir() and d.name != cur and (d / "papers" / fname).is_file():
+                found.append(((known.get(d.name) or {}).get("label") or d.name, d / "papers" / fname))
+    return found
+
+
+def load_paper(arg: str, auto_student: bool = False) -> Tuple[dict, Path]:
+    """Load a paper by path or slug (slugs are looked up in the current child's papers folder).
+
+    auto_student=True (no --student given): a slug found for exactly one other child is
+    loaded, and that child becomes the current student for the rest of the run.
+    """
+    auto = auto_student and not student_label()
     p = Path(arg).expanduser()
     if not p.exists():
         cand = papers_dir() / (arg if arg.endswith(".json") else arg + ".json")
+        others = [] if cand.exists() else _paper_elsewhere(arg)
         if cand.exists():
             p = cand
+        elif auto and len(others) == 1:
+            p = others[0][1]
+        elif auto and others:
+            raise ValueError("Paper %s exists for several children (%s) - choose one with --student"
+                             % (arg, ", ".join(student_desc(lab) for lab, _ in others)))
         else:
-            raise ValueError("Paper not found: %s (looked in %s)" % (arg, papers_dir()))
+            msg = "Paper not found: %s (looked in %s)" % (arg, papers_dir())
+            if others:
+                msg += ". It exists for " + ", ".join(
+                    "%s (--student '%s')" % (student_desc(lab), lab) for lab, _ in others)
+            raise ValueError(msg)
     paper = read_json(p)
     if not isinstance(paper, dict) or "questions" not in paper:
         raise ValueError("%s is not a paper JSON (no 'questions')" % p)
+    owner = paper_owner(paper, p)
+    if owner is not None and student_slug(owner) != student_slug():
+        if auto and STUDENT_RE.match(owner) and student_slug(owner):
+            set_student(owner)
+            print("NOTE: using student %s from the paper" % student_desc(owner), file=sys.stderr)
+        else:
+            print("WARNING: paper was made for %s but the student is %s"
+                  % (student_desc(owner), student_desc(student_label())), file=sys.stderr)
     return paper, p.resolve()
 
 
 def marks_for(paper: dict, q: dict) -> int:
     if paper.get("mode") == "practice":
-        return 3 if q.get("achievers") else 1
+        return achievers_marks(paper["exam"], paper.get("class", 5)) if q.get("achievers") else 1
     lv = get_level(paper["exam"], paper.get("level", 1), paper.get("class", 5))
     s = section_by_no(lv, q.get("section")) or expected_section(lv, int(q.get("id", 0)))
     return int(s["marks_each"]) if s else 1
@@ -773,18 +992,53 @@ def _kill_tree(proc) -> None:
 
 
 # -------------------------------------------------------------- selfcheck
+def _check_style(label: str, st: dict, errors: List[str]) -> None:
+    """Validate one (possibly class-merged) style entry."""
+    for k in ("figure_styles", "text_styles"):
+        v = st.get(k)
+        if v is None:
+            continue
+        if not isinstance(v, list) or not all(isinstance(x, str) and x.strip() for x in v):
+            errors.append("style %r: %s must be a list of non-empty strings" % (label, k))
+        elif len(set(v)) != len(v):
+            errors.append("style %r: duplicate entries in %s" % (label, k))
+    if "tips" in st and not (isinstance(st["tips"], str) and st["tips"].strip()):
+        errors.append("style %r: tips must be a non-empty string" % label)
+    f = st.get("figure")
+    fs, ts = st.get("figure_styles") or [], st.get("text_styles") or []
+    if f not in ("always", "often", "sometimes", "never"):
+        errors.append("style %r: bad figure value %r" % (label, f))
+    elif f == "always" and (not fs or ts):
+        errors.append("style %r: 'always' needs figure_styles and no text_styles" % label)
+    elif f == "never" and (not ts or fs):
+        errors.append("style %r: 'never' needs text_styles and no figure_styles" % label)
+    elif f in ("often", "sometimes") and (not fs or not ts):
+        errors.append("style %r: '%s' needs both style lists" % (label, f))
+
+
 def selfcheck(verbose: bool = True) -> int:
     errors: List[str] = []
     warns: List[str] = []
-    data = load_class(5)
     styles = load_styles()
-    for ek in EXAMS:
+    classes = supported_classes()
+    if not classes:
+        errors.append("no data/class*.json files found")
+    for cls in list(classes):
+        try:
+            d = load_class(cls)
+            if int(d["class"]) != cls or int(d["previous_class"]) != cls - 1:
+                errors.append("class%d.json: wrong class/previous_class" % cls)
+        except Exception as e:
+            errors.append("class%d.json: %s" % (cls, e))
+            classes.remove(cls)
+    for cls, ek in [(c, e) for c in classes for e in EXAMS]:
+        data = load_class(cls)
         ex = data["exams"].get(ek)
         if not ex:
-            errors.append("missing exam %s" % ek)
+            errors.append("C%d: missing exam %s" % (cls, ek))
             continue
         for lk, lv in ex["levels"].items():
-            tag = "%s L%s" % (ek, lk)
+            tag = "C%d %s L%s" % (cls, ek, lk)
             secs = lv["sections"]
             if [s["no"] for s in secs] != list(range(1, len(secs) + 1)):
                 errors.append("%s: sections not numbered 1..n" % tag)
@@ -809,25 +1063,56 @@ def selfcheck(verbose: bool = True) -> int:
                     st = styles.get(t)
                     if not st:
                         errors.append("no style entry for topic %r (%s S%s)" % (t, tag, s["no"]))
-    topics_all = set(all_topics())
+    topics_all = set().union(*[set(all_topics(cls=c)) for c in classes])
     for t, st in styles.items():
         if t not in topics_all:
             warns.append("style entry %r is not used by any syllabus" % t)
-        f = st.get("figure")
-        fs, ts = st.get("figure_styles") or [], st.get("text_styles") or []
-        if f not in ("always", "often", "sometimes", "never"):
-            errors.append("style %r: bad figure value %r" % (t, f))
-        elif f == "always" and (not fs or ts):
-            errors.append("style %r: 'always' needs figure_styles and no text_styles" % t)
-        elif f == "never" and (not ts or fs):
-            errors.append("style %r: 'never' needs text_styles and no figure_styles" % t)
-        elif f in ("often", "sometimes") and (not fs or not ts):
-            errors.append("style %r: '%s' needs both style lists" % (t, f))
-    for t in ("Time", "Fractions", "Memory", "Tenses", "Idioms", "MS-Word", "Internet"):
-        for ex in EXAMS:
-            if t in all_topics(ex):
-                if topic_lookup(t, ex) != t:
-                    errors.append("topic_lookup(%r, %s) did not return the exact topic" % (t, ex))
+        extra = set(st) - set(STYLE_KEYS) - {"class_overrides"}
+        if extra:
+            errors.append("style %r: unknown keys %s" % (t, ", ".join(sorted(extra))))
+        _check_style(t, merged_style(st), errors)
+        if "class_overrides" not in st:
+            continue
+        co = st["class_overrides"]
+        if not isinstance(co, dict) or not co:
+            errors.append("style %r: class_overrides must be a non-empty object" % t)
+            continue
+        for ck, ov in co.items():
+            lab = "%s (class %s)" % (t, ck)
+            if not (isinstance(ck, str) and ck.isdigit() and int(ck) in classes):
+                errors.append("style %r: class_overrides key %r is not a supported class" % (t, ck))
+                continue
+            if not isinstance(ov, dict) or not ov:
+                errors.append("style %r: override must be a non-empty object" % lab)
+                continue
+            bad = set(ov) - set(STYLE_KEYS)
+            if bad:
+                errors.append("style %r: override has unknown keys %s" % (lab, ", ".join(sorted(bad))))
+            _check_style(lab, merged_style(st, int(ck)), errors)
+    for t in ("Time", "Fractions", "Memory", "Tenses", "Idioms", "MS-Word", "Internet", "Money",
+              "Length, Weight and Capacity"):
+        for c in classes:
+            for ex in EXAMS:
+                if t in all_topics(ex, c):
+                    try:
+                        ok = topic_lookup(t, ex, c) == t
+                    except ValueError:
+                        ok = False
+                    if not ok:
+                        errors.append("topic_lookup(%r, %s, class %d) did not return the exact topic" % (t, ex, c))
+    if 5 in classes and achievers_marks("IMO", 5) != 3:
+        errors.append("achievers_marks(IMO, 5) should be 3")
+    if 3 in classes:
+        if achievers_marks("IMO", 3) != 2:
+            errors.append("achievers_marks(IMO, 3) should be 2")
+        for inp, want in (("Length, Weight and Capacity; Money", ["Length, Weight and Capacity", "Money"]),
+                          ("Length, Weight and Capacity", ["Length, Weight and Capacity"])):
+            try:
+                got = parse_topic_list(inp, "IMO", 3)
+            except ValueError as e:
+                got = str(e)
+            if got != want:
+                errors.append("parse_topic_list(%r) gave %r" % (inp, got))
     for nm_ in ("markup",):
         r = render_markup("2 < 3 and <b>NOT</b> [[frac:1 2/3]] [[blank]] x<br>y")
         if "<b>NOT</b>" not in r or "&lt; 3" not in r or 'class="frac"' not in r or "<br>" not in r:
@@ -845,6 +1130,7 @@ def selfcheck(verbose: bool = True) -> int:
         warns.append("PyMuPDF (fitz) not installed: PDF footers/verification/previews are skipped")
     if verbose:
         print("Skill dir : %s" % SKILL_DIR)
+        print("Classes   : %s" % ", ".join(str(c) for c in classes))
         print("Topics    : %d in syllabus, %d style entries" % (len(topics_all), len(styles)))
         print("Browser   : %s" % (br or "NOT FOUND"))
         print("PyMuPDF   : %s" % ("ok" if fitz_ok else "missing"))
@@ -879,27 +1165,53 @@ def _cmd_list(exam: Optional[str]) -> None:
                                            len(sc), ("%.0f" % max(sc)) if sc else "-"))
 
 
+STUDENT_CMDS = ("paths", "next-no", "list", "student-view")
+
+
 def main(argv=None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    lead = []  # "--student X" given before the subcommand is moved after it
+    while argv and (argv[0] == "--student" or argv[0].startswith("--student=")):
+        if argv[0] != "--student":
+            lead.append(argv.pop(0))
+            continue
+        if len(argv) < 2 or argv[1] in STUDENT_CMDS + ("students", "selfcheck"):
+            die("--student needs a value (a child's label, or '' for the default child)")
+        lead.append("--student=" + argv[1])
+        del argv[:2]
+    if lead and argv and argv[0] in ("students", "selfcheck"):
+        die("'%s' does not take --student" % argv[0])
+    if lead and argv and argv[0] in STUDENT_CMDS:
+        argv[1:1] = lead
     ap = argparse.ArgumentParser(description="SOF Olympiad prep helpers")
+    sp = argparse.ArgumentParser(add_help=False)
+    sp.add_argument("--student", default=None, help="which child, e.g. child2 (omit for the default child)")
     sub = ap.add_subparsers(dest="cmd")
-    sub.add_parser("paths", help="show data/output locations")
-    p = sub.add_parser("next-no", help="next free paper number")
+    sub.add_parser("paths", parents=[sp], help="show data/output locations")
+    p = sub.add_parser("next-no", parents=[sp], help="next free paper number")
     p.add_argument("--exam", required=True)
     p.add_argument("--mode", choices=("mock", "practice"), default="mock")
     p.add_argument("--level", type=int, default=1)
-    p.add_argument("--class", dest="cls", type=int, default=5)
-    p.add_argument("--topics", default="", help="practice: comma-separated topics")
+    p.add_argument("--class", dest="cls", type=int, default=None)
+    p.add_argument("--topics", default="", help="practice: topics separated by ';'")
     p.add_argument("--set-name", default=None, help="practice: custom set name")
-    p = sub.add_parser("list", help="list generated papers")
+    p = sub.add_parser("list", parents=[sp], help="list generated papers")
     p.add_argument("--exam", default=None)
-    p = sub.add_parser("student-view", help="write the paper without answers/explanations")
+    p = sub.add_parser("student-view", parents=[sp], help="write the paper without answers/explanations")
     p.add_argument("paper")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("students", help="list or add children (each child has separate papers and scores)")
+    p.add_argument("action", nargs="?", choices=("list", "add"), default="list")
+    p.add_argument("label", nargs="?", default=None)
+    p.add_argument("--class", dest="cls", type=int, default=None)
     sub.add_parser("selfcheck", help="check data files and tools")
     a = ap.parse_args(argv)
+    set_student(getattr(a, "student", None))
     try:
         if a.cmd == "paths":
             print("skill      : %s" % SKILL_DIR)
+            print("data root  : %s" % base_home())
+            print("student    : %s (Class %d)" % (student_label() or "(default)", student_class() or 5))
             print("home       : %s" % prep_home())
             print("papers     : %s" % papers_dir())
             print("work       : %s" % (prep_home() / "work"))
@@ -909,24 +1221,42 @@ def main(argv=None) -> int:
             print("pdf output : %s" % default_out_dir())
             print("browser    : %s" % (find_browser() or "NOT FOUND"))
         elif a.cmd == "next-no":
+            cls = resolve_class(a.cls)
             name = None
             if a.mode == "practice":
-                topics = [topic_lookup(t, a.exam, a.cls) for t in a.topics.split(",") if t.strip()]
+                topics = parse_topic_list(a.topics, a.exam, cls)
                 name = practice_name(topics, a.set_name)
-            n = next_paper_no(a.exam, a.mode, a.level, a.cls, name)
+            n = next_paper_no(a.exam, a.mode, a.level, cls, name)
             print(n)
-            print("slug: %s" % paper_slug(a.exam, a.cls, a.level, a.mode, n, name), file=sys.stderr)
+            print("slug: %s" % paper_slug(a.exam, cls, a.level, a.mode, n, name), file=sys.stderr)
         elif a.cmd == "list":
             _cmd_list(a.exam)
         elif a.cmd == "student-view":
-            paper, path = load_paper(a.paper)
+            paper, path = load_paper(a.paper, auto_student=(a.student is None))
             out = Path(a.out) if a.out else work_dir(paper.get("slug") or path.stem) / "student_view.json"
             write_json(out, student_view(paper))
             print(out)
+        elif a.cmd == "students":
+            if a.action == "add":
+                if not (a.label and a.label.strip()) or a.cls is None:
+                    die("usage: students add LABEL --class N")
+                if a.cls not in supported_classes():
+                    die("Class %s is not supported. Supported classes: %s"
+                        % (a.cls, ", ".join(str(c) for c in supported_classes())))
+                set_student(a.label)
+                remember_student(a.label, a.cls)
+                print("Added %s (Class %d): %s" % (a.label.strip(), a.cls, prep_home()))
+            else:
+                print("%-20s %5s  %s" % ("student", "class", "data folder"))
+                print("%-20s %5s  %s" % ("(default)", 5, base_home()))
+                for slug, e in sorted(load_students().items()):
+                    print("%-20s %5s  %s" % (e.get("label", slug), e.get("class", "?"),
+                                             base_home() / "students" / slug))
         elif a.cmd == "selfcheck":
             return selfcheck()
         else:
             ap.print_help()
+            return 2 if lead else 0
     except ValueError as e:
         die(str(e))
     return 0
