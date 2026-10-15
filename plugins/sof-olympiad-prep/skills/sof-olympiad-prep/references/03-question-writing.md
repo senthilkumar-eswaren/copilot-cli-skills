@@ -6,6 +6,9 @@ you were given (`work/<slug>/part_<pid>.spec.json`). This guide explains how to 
 questions that pass `validate_paper.py` and feel like a real SOF paper. If any row has
 `"figure": true` (or a passage has `"allow_figure": true`), also read `04-figures.md`.
 
+On Windows (PowerShell), type `python -X utf8` wherever this guide or `04-figures.md` says
+`python3`; it keeps files and printed text in UTF-8.
+
 ## 1. Workflow
 
 1. `cat` the spec. Note `exam`, `class`, `level`, `mode`, `output`, `validate_cmd`, `rules`,
@@ -15,8 +18,9 @@ questions that pass `validate_paper.py` and feel like a real SOF paper. If any r
 2. Write exactly one question per row, keeping the row's `id` and the row order.
 3. Work out every answer yourself with python3 (arithmetic, counting, dates, clocks, patterns,
    word counts) before you fix the options. Never trust mental arithmetic.
-4. Build the part file with a python3 script (do not hand-type JSON) and save it with
-   `json.dump(data, f, ensure_ascii=False, indent=1)` to the exact `output` path from the spec.
+4. Build the part file with a python3 script (do not hand-type JSON) and save it to the exact
+   `output` path from the spec with `open(output, "w", encoding="utf-8")` and
+   `json.dump(data, f, ensure_ascii=False, indent=1)`.
 5. Run `validate_cmd` exactly as given. Fix every ERROR. Fix WARNINGs too unless doing so would
    break a row instruction. Re-run until there are no errors.
 6. Reply with a 1-2 line summary (part id, number of questions, validator result).

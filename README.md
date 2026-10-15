@@ -31,6 +31,41 @@ Verify with `copilot plugin list` (or `/plugin list` inside an interactive sessi
 > install whatever external command-line tools that skill's instructions may shell out to (e.g.
 > `pandoc`, a browser, Python packages). Check each plugin's own docs for its runtime requirements.
 
+### Windows step by step (sof-olympiad-prep)
+
+Run these in **PowerShell** (Start → type "PowerShell"), opening a new window after each install
+so the new commands are found.
+
+1. Install PowerShell 7 and Copilot CLI (needs an active GitHub Copilot plan), then sign in:
+
+   ```powershell
+   winget install Microsoft.PowerShell
+   winget install GitHub.Copilot
+   copilot      # first run: type /login, follow the prompts, then /exit
+   ```
+
+2. Install **Python Install Manager** from the [Microsoft Store](https://apps.microsoft.com/detail/9NQ7512CXL7T)
+   or [python.org](https://www.python.org/downloads/windows/). In a new window run `python --version`
+   (the first run downloads Python; accept its prompts), then optionally add page footers and previews:
+
+   ```powershell
+   python -m pip install pymupdf
+   ```
+
+3. Install the skill:
+
+   ```powershell
+   copilot plugin marketplace add senthilkumar-eswaren/copilot-cli-skills
+   copilot plugin install sof-olympiad-prep@copilot-cli-skills
+   ```
+
+4. Start `copilot` and ask, for example, *"Make an IMO Class 5 mock paper"*. The question paper,
+   answer key and OMR sheet PDFs are saved in **Downloads** (made with Microsoft Edge, which comes
+   with Windows, or Chrome if installed).
+
+Update later with `copilot plugin update sof-olympiad-prep@copilot-cli-skills`. Windows support is
+new in 1.1.1; please report problems in this repo's Issues.
+
 ## Repo structure
 
 ```text
@@ -63,7 +98,7 @@ but every plugin in this repo currently contains just one skill.
 | Plugin | Description |
 |---|---|
 | [`cbse-unit-test-prep`](./plugins/cbse-unit-test-prep) | Generates a detailed CBSE unit-test/exam study guide (chapter notes + CBSE-pattern Q&A, exported as DOCX + PDF) from a school exam timetable/portions circular. Covers CBSE Class XI/XII, any stream. Requires `pandoc`, Python (`python-docx`, `pypdf`), and a Chromium-based browser on the machine running it — see the plugin's `references/03-assembly-and-conversion-pipeline.md` for an install matrix and graceful-fallback behavior when a tool is missing. |
-| [`sof-olympiad-prep`](./plugins/sof-olympiad-prep) | Generates original SOF-style practice papers for Class 3 and Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a separate score log for each child and weak-topic reports. Several children can share one setup: register each with its class (`sof_common.py students add <label> --class 3`) and pass `--student <label>`. Papers are written fresh from the published exam pattern and syllabus — no SOF papers are copied or bundled; not affiliated with SOF. Requires Python 3.9+ (standard library only) and Google Chrome, Microsoft Edge or Chromium for PDFs (or set `OLYMPIAD_BROWSER` to the browser binary; without a browser it writes HTML only); PyMuPDF is optional (page footers, previews). Data is kept in `~/olympiad-prep` (override with `OLYMPIAD_PREP_HOME`); PDFs are saved to `~/Downloads` when it exists (override with `OLYMPIAD_OUT_DIR`). |
+| [`sof-olympiad-prep`](./plugins/sof-olympiad-prep) | Generates original SOF-style practice papers for Class 3 and Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a separate score log for each child and weak-topic reports. Several children can share one setup: register each with its class (`sof_common.py students add <label> --class 3`) and pass `--student <label>`. Papers are written fresh from the published exam pattern and syllabus — no SOF papers are copied or bundled; not affiliated with SOF. Requires Python 3.9+ (standard library only) and Google Chrome, Microsoft Edge or Chromium for PDFs (or set `OLYMPIAD_BROWSER` to the browser binary; without a browser it writes HTML only); PyMuPDF is optional (page footers, previews). Data is kept in `~/olympiad-prep` (override with `OLYMPIAD_PREP_HOME`); PDFs are saved to `~/Downloads` when it exists (override with `OLYMPIAD_OUT_DIR`). On Windows, see [Windows step by step](#windows-step-by-step-sof-olympiad-prep). |
 
 ## Adding a new plugin to this repo
 

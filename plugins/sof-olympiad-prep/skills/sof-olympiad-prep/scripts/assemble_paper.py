@@ -28,7 +28,7 @@ SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from sof_common import (base_home, die, papers_dir, read_json,  # noqa: E402
+from sof_common import (PY, base_home, die, papers_dir, qarg, read_json,  # noqa: E402
                         record_paper, set_student, student_label, student_slug,
                         today, work_dir, write_json)
 import validate_paper  # noqa: E402
@@ -449,10 +449,10 @@ def main(argv=None):
     print("%s - %d questions, %s marks, %s minutes"
           % (paper.get("title", slug), len(questions),
              paper.get("total_marks", "?"), paper.get("time_minutes", "?")))
-    nxt = str(out) if args.out else slug
+    nxt = qarg(out) if args.out else slug
     if student_label():
-        nxt += " --student '%s'" % student_label()
-    print("Next: python3 %s %s" % (SCRIPTS / "render_paper.py", nxt))
+        nxt += " --student " + qarg(student_label())
+    print("Next: %s %s %s" % (PY, qarg(SCRIPTS / "render_paper.py"), nxt))
     return 0
 
 

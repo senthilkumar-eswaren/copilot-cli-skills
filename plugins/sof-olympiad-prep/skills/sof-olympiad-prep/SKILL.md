@@ -52,6 +52,22 @@ Environment:
 - Python 3.9 standard library only, plus Google Chrome (or Edge/Chromium) for PDFs; PyMuPDF, if
   installed, adds page footers and previews. Do not install packages.
 
+## Windows (PowerShell)
+
+Copilot CLI runs commands in PowerShell on Windows. Read every command in this skill as follows:
+- Run `python` instead of `python3`; tell writer agents to use `python -X utf8` (see `03-question-writing.md`).
+- If `SKILL_DIR` is unknown, set `$S` (paths with spaces are fine):
+  ```powershell
+  $C = if ($env:COPILOT_HOME) { $env:COPILOT_HOME } else { "$HOME/.copilot" }
+  $S = Join-Path (Get-ChildItem "$C/skills", "$C/installed-plugins" -Recurse -Filter SKILL.md -ErrorAction SilentlyContinue | Where-Object { $_.Directory.Name -eq 'sof-olympiad-prep' } | Select-Object -First 1).DirectoryName scripts
+  ```
+- Put each command on one line (no `\` continuations), use `| Select-Object -Last 40` for
+  `| tail -40`, and `$env:NAME = "value"` to set a variable.
+- `validate_cmd` and the commands the scripts print are PowerShell-ready: run them as printed.
+- PDFs use Chrome if installed, otherwise the built-in Microsoft Edge.
+- If ₹, × or – look garbled in command output, put `[Console]::OutputEncoding = [Text.Encoding]::UTF8;`
+  in front of the command (the PDFs are not affected).
+
 ## Children and classes
 
 Each child has their own papers, history and score log. The first child is the **default child**
@@ -224,8 +240,10 @@ second child; set `OLYMPIAD_PREP_HOME` only for a throwaway test folder.
   Warnings are acceptable; `--strict` makes them fail.
 - "already exists": add `--force` to assemble/render, or rebuild with `blueprint.py --clean`.
 - `BrokenPipeError` from `blueprint.py`: output was piped to `head`; use `tail`.
-- Chrome hangs: `ps -ax | grep '[s]of-chrome'`, then `kill <PID>`; `--html-only` writes HTML
-  that can be printed from a browser.
+- Chrome hangs: `ps -ax | grep '[s]of-chrome'`, then `kill <PID>` (Windows:
+  `Get-CimInstance Win32_Process | Where-Object CommandLine -like '*sof-chrome*' | ForEach-Object { Stop-Process -Id $_.ProcessId }`);
+  `--html-only` writes HTML that can be printed from a browser.
+- "Could not replace ... PDF viewer": close that PDF (Windows locks open files), then render again with `--force`.
 - PDFs go to `OLYMPIAD_OUT_DIR` (default `~/Downloads`) or `--out-dir`.
 - "Paper not found ... It exists for 'X'": re-run with `--student 'X'`. "exists for several
   children": choose one with `--student`. "WARNING: paper was made for 'X'": the paper belongs to

@@ -26,16 +26,15 @@ import csv
 import json
 import os
 import re
-import shlex
 import sys
 import textwrap
 from collections import OrderedDict
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from sof_common import (EXAMS, LETTERS, attempts_path, base_home, die,  # noqa: E402
+from sof_common import (EXAMS, LETTERS, PY, attempts_path, base_home, die,  # noqa: E402
                         get_level, load_paper, load_students, marks_for, norm_exam,
-                        paper_footer_label, paper_title, prep_home, scores_csv_path,
+                        paper_footer_label, paper_title, prep_home, qarg, scores_csv_path,
                         set_student, strip_markup, student_desc, student_label,
                         student_slug, today, topic_lookup)
 
@@ -420,7 +419,7 @@ def _dq(s):
 
 def _student_opt():
     lab = student_label()
-    return " --student " + shlex.quote(lab) if lab else ""
+    return " --student " + qarg(lab) if lab else ""
 
 
 def _for_child():
@@ -446,16 +445,18 @@ def _hint_other_children(file=None):
             if d.is_dir() and d.name != me and _nonempty(d / name):
                 e = known.get(d.name)
                 lab = (e.get("label") if isinstance(e, dict) else None) or d.name
-                found.append("'%s' (--student %s)" % (lab, shlex.quote(lab)))
+                found.append("'%s' (--student %s)" % (lab, qarg(lab)))
     if found:
         print("Attempts are logged for " + ", ".join(found) + ".", file=file)
 
 
 def suggest_cmd(exam, cls, topics):
     bp, home = BLUEPRINT, os.path.expanduser("~")
-    if bp.startswith(home + os.sep):
+    if os.name == "nt":
+        bp = qarg(bp)
+    elif bp.startswith(home + os.sep):
         bp = "~" + bp[len(home):]
-    parts = ["python3", bp, "--exam", exam, "--mode", "practice"]
+    parts = [PY, bp, "--exam", exam, "--mode", "practice"]
     try:
         if int(cls) != 5:
             parts += ["--class", str(cls)]
@@ -463,9 +464,9 @@ def suggest_cmd(exam, cls, topics):
         pass
     lab = student_label()
     if lab:
-        parts += ["--student", shlex.quote(lab)]
+        parts += ["--student", qarg(lab)]
     # "; " because some topic names contain commas (e.g. "Length, Weight and Capacity")
-    return " ".join(parts) + " --topics " + _dq("; ".join(topics))
+    return " ".join(parts) + " --topics " + (qarg if os.name == "nt" else _dq)("; ".join(topics))
 
 
 def cmd_report(args):

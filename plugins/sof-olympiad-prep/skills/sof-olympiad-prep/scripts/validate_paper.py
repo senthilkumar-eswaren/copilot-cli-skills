@@ -21,7 +21,7 @@ from sof_common import (LETTERS, TOKEN_RE, read_json, die, get_level,  # noqa: E
                         norm_exam, expected_section, find_bad_tags,
                         unbalanced_tags, question_text_for_compare,
                         question_figures, question_signature, svg_check,
-                        option_plain, history_questions, strip_markup)
+                        option_plain, history_questions, strip_markup, set_student)
 
 DIFFICULTIES = ("easy", "medium", "hard")
 MODES = ("mock", "practice")
@@ -94,6 +94,8 @@ def load_doc(path):
     try:
         with open(path, encoding="utf-8") as f:
             text = f.read().strip()
+    except UnicodeDecodeError as e:
+        return None, "not UTF-8 text (%s) - write it with open(path, 'w', encoding='utf-8')" % e
     except (IOError, OSError) as e:
         die("cannot read %s: %s" % (path, e))
     if text.startswith("```"):
@@ -867,7 +869,12 @@ def main(argv=None):
     ap.add_argument("--part", help="part name (e.g. s1) when checking one writer part")
     ap.add_argument("--no-history", action="store_true", help="skip the repeat check against earlier papers")
     ap.add_argument("--strict", action="store_true", help="treat warnings as errors")
+    ap.add_argument("--home", help="data root (default: OLYMPIAD_PREP_HOME or ~/olympiad-prep)")
+    ap.add_argument("--student", help="child's label ('--student=' for the default child)")
     args = ap.parse_args(argv)
+    if args.home:
+        os.environ["OLYMPIAD_PREP_HOME"] = os.path.expanduser(args.home)
+    set_student(args.student)
     if not os.path.isfile(args.file):
         name = args.file if args.file.endswith(".json") else args.file + ".json"
         alt = os.path.join(str(papers_dir()), name)

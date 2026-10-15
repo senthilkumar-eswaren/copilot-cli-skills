@@ -30,6 +30,7 @@ import json
 import math
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
@@ -39,6 +40,15 @@ import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+# Windows pipes default to a legacy code page (e.g. cp1252) that cannot print characters such as
+# arrows or the rupee sign used in explanations, so always talk UTF-8.
+for _stream in (sys.stdin, sys.stdout, sys.stderr):
+    try:
+        if _stream is not None and re.sub(r"[-_]", "", (_stream.encoding or "").lower()) != "utf8":
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError, OSError):
+        pass
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = SKILL_DIR / "data"
@@ -62,6 +72,21 @@ def rhalf(x: float) -> int:
 
 def today() -> str:
     return _dt.date.today().isoformat()
+
+
+# Commands printed for the agent or user to run: PowerShell on Windows, sh/zsh elsewhere.
+PY = "python" if os.name == "nt" else "python3"
+_PS_SAFE_RE = re.compile(r"^[A-Za-z0-9_./\\:=+-]+$")
+
+
+def qarg(s) -> str:
+    """Quote one command-line argument for the user's shell."""
+    s = str(s)
+    if os.name != "nt":
+        return shlex.quote(s)
+    if _PS_SAFE_RE.match(s) and not s.startswith("-"):
+        return s
+    return "'" + s.replace("'", "''") + "'"
 
 
 def read_json(path) -> Any:
@@ -867,11 +892,24 @@ _WSL_PATHS = [
 ]
 
 
+def _windows_browser_paths() -> List[str]:
+    """Chrome, Edge (part of Windows 10/11) and Chromium in their usual install folders."""
+    rels = (("Google", "Chrome", "Application", "chrome.exe"),
+            ("Microsoft", "Edge", "Application", "msedge.exe"),
+            ("Chromium", "Application", "chrome.exe"))
+    bases = []
+    for var in ("PROGRAMFILES", "PROGRAMFILES(X86)", "PROGRAMW6432", "LOCALAPPDATA"):
+        b = os.environ.get(var)
+        if b and b not in bases:
+            bases.append(b)
+    return [os.path.join(b, *rel) for rel in rels for b in bases]
+
+
 def find_browser() -> Optional[str]:
     env = os.environ.get("OLYMPIAD_BROWSER")
     if env and Path(env).exists():
         return env
-    for p in _BROWSER_PATHS:
+    for p in _BROWSER_PATHS + (_windows_browser_paths() if os.name == "nt" else []):
         if Path(p).exists():
             return p
     for n in _BROWSER_NAMES:
@@ -900,7 +938,10 @@ def html_to_pdf(html_path, pdf_path, browser: Optional[str] = None, timeout: int
     pdf_path = Path(pdf_path).resolve()
     pdf_path.parent.mkdir(parents=True, exist_ok=True)
     if pdf_path.exists():
-        pdf_path.unlink()
+        try:
+            pdf_path.unlink()
+        except OSError as e:
+            return False, "Could not replace %s - close it if it is open in a PDF viewer (%s)" % (pdf_path, e)
     wsl = browser.startswith("/mnt/") and browser.lower().endswith(".exe")
     prof = tempfile.mkdtemp(prefix="sof-chrome-")
     fd, errname = tempfile.mkstemp(prefix="sof-chrome-", suffix=".log")
@@ -1123,7 +1164,10 @@ def selfcheck(verbose: bool = True) -> int:
     if not br:
         warns.append("no Chrome/Chromium/Edge found: render_paper.py will produce HTML only")
     try:
-        import fitz  # noqa: F401
+        try:
+            import pymupdf  # noqa: F401
+        except ImportError:
+            import fitz  # noqa: F401  (PyMuPDF older than 1.24.3)
         fitz_ok = True
     except Exception:
         fitz_ok = False

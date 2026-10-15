@@ -29,9 +29,12 @@ from sof_common import (LETTERS, default_out_dir, die, find_browser, get_exam,  
     student_view, svg_check, svg_for_html, work_dir)
 
 try:
-    import fitz  # PyMuPDF (optional: footers, verification, previews)
+    import pymupdf as fitz  # PyMuPDF (optional: footers, verification, previews)
 except Exception:  # pragma: no cover
-    fitz = None
+    try:
+        import fitz  # PyMuPDF older than 1.24.3; newer releases print a deprecation notice on stdout
+    except Exception:
+        fitz = None
 
 esc = html.escape
 ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii"]

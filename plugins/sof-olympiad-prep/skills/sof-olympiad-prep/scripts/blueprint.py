@@ -550,7 +550,7 @@ def rules_for(cls=5):
     rules = [
         "Write ORIGINAL questions only. Never copy or closely paraphrase SOF, MTG or any published question.",
         "Exactly one option is correct; the other three are plausible distractors built from common Class %d mistakes." % cls,
-        "Check every calculation with python3 before writing it; the explanation must show the working.",
+        "Check every calculation with %s before writing it; the explanation must show the working." % PY,
         "Use Indian context (%s, Indian names, places, festivals) and Class %d vocabulary." % (ctx, cls),
         "Follow each row exactly: topic, syllabus_class, difficulty, format, format_instructions, style, prefix and tips.",
         "If figure is true, include an SVG figure (see reference 04) that the question genuinely needs.",
@@ -638,6 +638,9 @@ def avoid_similar(slug, topics):
 def write_specs(meta, rows, passages, parts, wd, bp_path):
     home = base_home()
     validator = os.path.join(str(SCRIPTS_DIR), "validate_paper.py")
+    # Explicit flags rather than env-var prefixes so the command also runs in PowerShell;
+    # "--student=" (not "--student ''") because Windows PowerShell 5.1 drops empty arguments.
+    stu = ("--student " + qarg(student_label())) if student_label() else "--student="
     refs = [ref_path("03"), ref_path("04")]
     avoid = avoid_similar(meta["slug"], set(r["topic"] for r in rows))
     out = []
@@ -653,8 +656,8 @@ def write_specs(meta, rows, passages, parts, wd, bp_path):
         spec.update({"part": pname, "ids": list(ids), "output": pjson, "references": refs,
                      "rules": rules_for(meta["class"]), "exam_rules": EXAM_RULES.get(meta["exam"], []),
                      "avoid_similar": dict((t, avoid[t]) for t in ptopics if t in avoid),
-                     "validate_cmd": "OLYMPIAD_PREP_HOME='%s' OLYMPIAD_STUDENT='%s' python3 '%s' '%s' --blueprint '%s' --part %s"
-                                     % (home, student_label() or "", validator, pjson, bp_path, pname),
+                     "validate_cmd": " ".join([PY, qarg(validator), qarg(pjson), "--blueprint", qarg(bp_path),
+                                               "--part", qarg(pname), "--home", qarg(home), stu]),
                      "passages": ppass, "rows": prows})
         write_json(pspec, spec)
         out.append({"name": pname, "ids": list(ids), "json": pjson, "spec": pspec})
