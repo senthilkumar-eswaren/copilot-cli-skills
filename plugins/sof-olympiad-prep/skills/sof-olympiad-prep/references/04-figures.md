@@ -229,7 +229,8 @@ q["table"] = {"headers": ["Day", "Books read"],
               "caption": "Key: ● = 10 books, ◐ = 5 books"}
 ```
 
-- Use plain symbols (● ◐ ■ ★ ✓), never emoji. Always give the key in `caption`.
+- Use plain symbols (● ◐ ■ ◧ ★ ✓), never emoji: ◐ is half of ●, ◧ is half of ■. Always give the
+  key in `caption`.
 - A half symbol must be exactly half of the key value.
 
 ### 4.8 Venn diagrams

@@ -45,8 +45,17 @@ CSS = """
 @page { size: A4; margin: 12mm 12mm 16mm 12mm; }
 * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt;
-  line-height: 1.35; color: #1b1b1b; }
+/* Symbols: "SOF Shapes" takes all geometric shapes and misc symbols from one symbol font, so full,
+   half and outline shapes match in size; the symbol fonts after the text fonts cover the rest
+   (Windows, macOS, Linux). Without them Chrome picks a fallback font per line, so the same symbol
+   can print in two sizes on one page. */
+@font-face { font-family: "SOF Shapes"; src: local("Segoe UI Symbol"), local("Apple Symbols"),
+  local("DejaVu Sans"); unicode-range: U+25A0-25FF, U+2600-26FF, U+2B00-2BFF; }
+body { font-family: "SOF Shapes", "Helvetica Neue", Helvetica, Arial, "Segoe UI Symbol",
+  "Apple Symbols", "Zapf Dingbats", "DejaVu Sans", sans-serif; font-size: 10.5pt; line-height: 1.35;
+  color: #1b1b1b; }
+svg { font-family: "SOF Shapes", Arial, "Segoe UI Symbol", "Apple Symbols", "Zapf Dingbats",
+  "DejaVu Sans", sans-serif; }
 .hdr { display: flex; align-items: stretch; border-bottom: 3px solid #e8731a;
   padding-bottom: 6px; margin-bottom: 8px; }
 .badge { width: 96px; min-height: 52px; background: #1f2a44; color: #fff; text-align: center;

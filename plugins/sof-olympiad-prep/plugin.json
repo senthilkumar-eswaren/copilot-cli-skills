@@ -1,7 +1,7 @@
 {
   "name": "sof-olympiad-prep",
   "description": "Generates original SOF-style practice papers for Class 3 and Class 5 olympiads (IMO, IEO, ICSO): full mock tests and topic-wise practice sets with answer keys and OMR sheets as print-ready PDFs, plus marking, a separate score log for each child and weak-topic reports.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": {
     "name": "senthilkumar-eswaren"
   },
